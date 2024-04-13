@@ -1,4 +1,4 @@
-package com.restaurant.enums;
+package com.duelly.enums;
 
 public enum ChallengeType {
     MEMBER,

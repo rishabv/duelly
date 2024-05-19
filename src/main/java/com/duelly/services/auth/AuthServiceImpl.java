@@ -97,6 +97,7 @@ public class AuthServiceImpl implements AuthService{
         if(!loggedInUser.isPresent()){
             throw new RuntimeException("Invalid user login");
         }
+        System.out.println(request.getOtp() + " " + user.getPhoneVerifyOtp());
         this.verifyUser(request.getOtp(), user.getPhoneVerifyOtp(), user.getOtpExpirationTimePhone());
         user.setVerify(true);
         user.setPhoneVerified(true);
@@ -110,7 +111,7 @@ public class AuthServiceImpl implements AuthService{
 
     private void verifyUser(int requestOtp, int otp, LocalDateTime tokenExpirationTimePhone){
         var now = LocalDateTime.now();
-        if(tokenExpirationTimePhone.isBefore(now)){
+        if(!tokenExpirationTimePhone.isBefore(now)){
             throw new IllegalArgumentException("Otp time has been exceeded.Please resend the otp");
         }
         if(requestOtp != otp) {

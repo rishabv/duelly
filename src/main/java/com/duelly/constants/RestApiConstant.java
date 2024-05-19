@@ -8,6 +8,8 @@ public class RestApiConstant {
 
     public static final String LOGIN = "/login";
     public static final String SIGNUP = "/signup";
-    public static final String VERIFY = "/verify";
+    public static final String VERIFY = "/verifyUser";
+
+    public static final String CHALLENGE = "/challenge";
 
 }

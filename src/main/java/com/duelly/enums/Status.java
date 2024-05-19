@@ -1,4 +1,4 @@
-package com.restaurant.enums;
+package com.duelly.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
-package com.restaurant.dtos;
+package com.duelly.dtos;
 
-import com.restaurant.enums.Status;
+import com.duelly.enums.Status;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

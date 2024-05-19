@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.duelly.constants.SuccessMessage;
@@ -39,10 +40,10 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping(RestApiConstant.SIGNUP)
-    public ResponseEntity<SignupResponse<?>> signupUser(@Valid @ModelAttribute SignupRequest signupRequest){
+    public ResponseEntity<SignupResponse<?>> signupUser(@Valid @ModelAttribute SignupRequest signupRequest) {
         UserDto createdUser = authService.createUser(signupRequest);
-        log.info("Here is the password"+signupRequest.getPassword());
-        if(createdUser==null){
+        log.info("Here is the password" + signupRequest.getPassword());
+        if (createdUser == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new SignupResponse<>("User not created"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(new SignupResponse<>(createdUser, SuccessMessage.ACCOUNT_CREATED));
@@ -58,7 +59,9 @@ public class AuthController {
     }
 
     @PutMapping(RestApiConstant.VERIFY)
-    public ResponseEntity<BaseApiResponse<?>> verifyUser(@Valid VerifyUserRequest request){
-    return null;
+    public ResponseEntity<BaseApiResponse<?>> verifyUser(@Valid @RequestBody VerifyUserRequest request, @AuthenticationPrincipal User user) {
+        log.info(request.getOtp() + "");
+        UserDto userDto = authService.verify(request, user);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseApiResponse<>(user, SuccessMessage.EMIAL_VERIFIED));
     }
 }

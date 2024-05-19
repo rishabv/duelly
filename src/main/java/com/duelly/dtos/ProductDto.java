@@ -1,4 +1,4 @@
-package com.restaurant.dtos;
+package com.duelly.dtos;
 
 import lombok.Data;
 
@@ -9,7 +9,6 @@ public class ProductDto {
     private String price;
     private String description;
     private String image;
-
     private Long categoryId;
     private String categoryName;
 }

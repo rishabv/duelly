@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,10 +26,10 @@ public class ChallengeController {
     @Operation(summary = "Fetching the list of all the categories.")
     @GetMapping("/category/list")
     public ResponseEntity<BaseApiResponse<List<CategoryDto>>> getCategorylist() {
-//        List<CategoryDto> categoryList = challengeService.getAllCategorylist();
-//        if(categoryList == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-        return ResponseEntity.ok(new BaseApiResponse<>(new ArrayList<>(), "List fetched sucessfully."));
+        List<CategoryDto> categoryList = challengeService.getAllCategorylist();
+        if(categoryList == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new BaseApiResponse<>(categoryList     , "List fetched sucessfully."));
     }
 }

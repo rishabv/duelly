@@ -10,6 +10,9 @@ public class SuccessMessage {
     public static final String PARTICIPATED_SUCCESS = "Participated successfully.";
 
     public static final String CATEGORY_CREATED = "Category created successfully.";
+
+    public static final String CATEGORY_DELETED = "Category created successfully.";
+
     public static final String CHALLENGE_CREATED = "Challenge created successfully.";
 
 

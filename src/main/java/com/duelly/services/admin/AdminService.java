@@ -5,4 +5,6 @@ import com.duelly.entities.Category;
 
 public interface AdminService {
     Category createCategory(CategoryDto data);
+
+    String removeCategory(Long id);
 }

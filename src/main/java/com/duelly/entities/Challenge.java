@@ -23,8 +23,8 @@ public class Challenge extends BaseEntity {
     private String validFrom;
     private String validTo;
     private boolean isPrice = false;
-//    @Enumerated(EnumType.ORDINAL)
-//    private ChallengeType challengeType;
+    @Enumerated(EnumType.ORDINAL)
+    private ChallengeType challengeType;
     @ManyToOne
     private User user;
     private String challengeRequirement;

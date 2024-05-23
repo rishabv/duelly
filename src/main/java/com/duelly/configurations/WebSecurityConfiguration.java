@@ -38,7 +38,7 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf(AbstractHttpConfigurer::disable).cors(cors->cors.disable())
-                .authorizeHttpRequests(req->req.requestMatchers(RestApiConstant.BASE_URL + "/auth/**", RestApiConstant.BASE_URL + "/open-api/**", "/swagger-ui/*", "/v3/api-docs/swagger-config", "/v3/api-docs").permitAll()
+                .authorizeHttpRequests(req->req.requestMatchers(RestApiConstant.BASE_URL + "/auth/**", RestApiConstant.BASE_URL + "/open-api/**", "/swagger-ui/*").permitAll()
                         .requestMatchers(HttpMethod.POST,RestApiConstant.BASE_URL + "/admin/**", RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())
                         .requestMatchers(HttpMethod.GET, RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.USER.name())
                         .requestMatchers(HttpMethod.PUT,RestApiConstant.BASE_URL + "/admin/**", RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())

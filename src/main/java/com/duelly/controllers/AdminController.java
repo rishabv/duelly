@@ -10,20 +10,23 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping(RestApiConstant.BASE_URL + RestApiConstant.ADMIN_URL)
 public class AdminController {
-//    private final AdminService adminService;
-//    @PostMapping("/category")
-//    public ResponseEntity<?> createCategory(@RequestBody @Valid CategoryDto body) {
-//        Category category = adminService.createCategory(body);
-//        if(category == null) return ResponseEntity.notFound().build();
-//        return ResponseEntity.ok(new BaseApiResponse<>(category, SuccessMessage.CATEGORY_CREATED));
-//    }
+    private final AdminService adminService;
+    @PostMapping("/category")
+    public ResponseEntity<?> createCategory(@RequestBody @Valid CategoryDto body) {
+        Category category = adminService.createCategory(body);
+        if(category == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new BaseApiResponse<>(category, SuccessMessage.CATEGORY_CREATED));
+    }
+
+    @DeleteMapping("/category/{id}")
+    public ResponseEntity<?> removeCategory(@PathVariable Long id){
+        System.out.println(id);
+        return ResponseEntity.ok(new BaseApiResponse<>(adminService.removeCategory(id)));
+    }
 }

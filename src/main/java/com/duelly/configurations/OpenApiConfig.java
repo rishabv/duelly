@@ -15,9 +15,6 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-//        Server server = new Server();
-//        server.setUrl("http://localhost:8080");
-//        server.setDescription("Development");
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes(SCHEME_NAME, createSecurityScheme()));
     }

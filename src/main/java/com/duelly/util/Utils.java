@@ -9,8 +9,12 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.text.DecimalFormat;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Random;
 
 @Component
@@ -96,5 +100,11 @@ public class Utils {
             // Clean out temporary data
             Arrays.fill(generatedData, (byte)0);
         }
+    }
+
+    public static Date getDateFromIsoString(String s){
+        TemporalAccessor ta = DateTimeFormatter.ISO_INSTANT.parse(s);
+        Instant i = Instant.from(ta);
+        return Date.from(i);
     }
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -16,6 +18,9 @@ public class Challenge extends BaseEntity {
     @ManyToOne()
     @JoinColumn(referencedColumnName = "id", name = "created_by")
     private User createdBy;
+    @ManyToOne()
+    @JoinColumn(referencedColumnName = "id", name = "category_id")
+    private Category category;
     private String challengeName = "";
     private String thumbnailImageUrlName = "";
     private String videoUrl = "";
@@ -25,6 +30,11 @@ public class Challenge extends BaseEntity {
     private boolean isPrice = false;
     @Enumerated(EnumType.ORDINAL)
     private ChallengeType challengeType;
+//    @OneToMany(mappedBy = "challenge",
+//            cascade = CascadeType.ALL)
+//    private Set<Participant> participants;
+    @JoinColumn(referencedColumnName = "id", name = "voter_id")
+    private Set<User> votedBy;
     @ManyToOne
     private User user;
     private String challengeRequirement;
@@ -32,7 +42,9 @@ public class Challenge extends BaseEntity {
     private String priceName;
     private String priceImage;
     private String companyName;
-    private Long companyId;
+    @ManyToOne
+    @JoinColumn(name="company_id")
+    private Sponsor company;
     private int totalJudge = 0;
     private String judgePriceImage;
     private String judgePrizeName;

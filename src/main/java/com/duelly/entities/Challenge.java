@@ -30,9 +30,6 @@ public class Challenge extends BaseEntity {
     private boolean isPrice = false;
     @Enumerated(EnumType.ORDINAL)
     private ChallengeType challengeType;
-//    @OneToMany(mappedBy = "challenge",
-//            cascade = CascadeType.ALL)
-//    private Set<Participant> participants;
     @JoinColumn(referencedColumnName = "id", name = "voter_id")
     private Set<User> votedBy;
     @ManyToOne

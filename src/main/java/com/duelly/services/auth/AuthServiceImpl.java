@@ -1,9 +1,13 @@
 package com.duelly.services.auth;
 
+import com.duelly.constants.ErrorMessages;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.requests.LoginRequest;
+import com.duelly.dtos.requests.RefreshRequest;
 import com.duelly.dtos.requests.SignupRequest;
+import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.LoginResponse;
+import com.duelly.dtos.responses.RefreshResponse;
 import com.duelly.enums.UserRole;
 import com.duelly.dtos.UserDto;
 import com.duelly.dtos.requests.VerifyUserRequest;
@@ -15,8 +19,10 @@ import com.duelly.util.Utils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -88,6 +94,21 @@ public class AuthServiceImpl implements AuthService{
         userDto.setToken(token);
         BeanUtils.copyProperties(userDetails, userDto);
        return userDto;
+    }
+
+    @Override
+    public RefreshResponse getRefreshToken(String token){
+        String userEmail = jwtUtil.extractUsername(token);
+        UserDetails userDetails = userService.loadUserByUsername(userEmail);
+        if(jwtUtil.isTokenValid(token, userDetails)){
+            RefreshResponse res = new RefreshResponse();
+            final String newToken = jwtUtil.generateToken(userDetails);
+            res.setRefreshToken(token);
+            res.setToken(newToken);
+            return res;
+        } else {
+            throw new IllegalArgumentException(ErrorMessages.SESSION_EXPIRED);
+        }
     }
 
     @Override

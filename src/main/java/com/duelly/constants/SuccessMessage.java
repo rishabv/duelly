@@ -11,9 +11,12 @@ public class SuccessMessage {
 
     public static final String CATEGORY_CREATED = "Category created successfully.";
 
-    public static final String CATEGORY_DELETED = "Category created successfully.";
+    public static final String CATEGORY_DELETED = "Category deleted successfully.";
 
     public static final String CHALLENGE_CREATED = "Challenge created successfully.";
 
+    public static final String CHALLENGE_DELETED = "Challenge removed.";
+    public static final String CHALLENGE_PARTICIPATED = "Participated successfully.";
+    public static final String COMPANY_CREATED = "Company created successfully.";
 
 }

@@ -3,9 +3,12 @@ package com.duelly.controllers;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.ErrorDto;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -38,6 +41,12 @@ public class GlobalControllerAdvice {
     @ResponseStatus(value = HttpStatus.CONFLICT)
     public BaseApiResponse<String> handleIllegalArgumentException(IllegalArgumentException ex) {
         return new BaseApiResponse<>(new ErrorDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<Object> handleJwtException(JwtException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)

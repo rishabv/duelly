@@ -2,13 +2,16 @@ package com.duelly.controllers;
 
 import com.duelly.constants.RestApiConstant;
 import com.duelly.dtos.requests.LoginRequest;
+import com.duelly.dtos.requests.RefreshRequest;
 import com.duelly.dtos.requests.VerifyUserRequest;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.LoginResponse;
+import com.duelly.dtos.responses.RefreshResponse;
 import com.duelly.entities.BaseEntity;
 import com.duelly.entities.User;
 import com.duelly.services.UserService.UserService;
 import com.duelly.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -40,7 +43,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
 
     @PostMapping(RestApiConstant.SIGNUP)
-    public ResponseEntity<SignupResponse<?>> signupUser(@Valid @ModelAttribute SignupRequest signupRequest) {
+    public ResponseEntity<SignupResponse<?>> signupUser(@Valid @RequestBody SignupRequest signupRequest) {
         UserDto createdUser = authService.createUser(signupRequest);
         log.info("Here is the password" + signupRequest.getPassword());
         if (createdUser == null) {
@@ -55,6 +58,14 @@ public class AuthController {
         LoginResponse response = new LoginResponse();
         response.setUserInfo(user);
         response.setMessage(SuccessMessage.LOGGED_IN);
+        return response;
+    }
+
+    @PostMapping(RestApiConstant.REFRESH)
+    public RefreshResponse refresh(HttpServletRequest request){
+        final String header = request.getHeader("Authorization");
+        final String token = header.substring(7);
+        RefreshResponse response = authService.getRefreshToken(token);
         return response;
     }
 

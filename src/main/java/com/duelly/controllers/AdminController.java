@@ -24,9 +24,16 @@ public class AdminController {
         return ResponseEntity.ok(new BaseApiResponse<>(category, SuccessMessage.CATEGORY_CREATED));
     }
 
+    @GetMapping("/category/{id}")
+    public ResponseEntity<?> getCategoryDetails(@RequestBody @PathVariable Long id) {
+        System.out.println("Here");
+        Category category = adminService.getCategoryDetails(id);
+        if(category == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new BaseApiResponse<>(category));
+    }
+
     @DeleteMapping("/category/{id}")
     public ResponseEntity<?> removeCategory(@PathVariable Long id){
-        System.out.println(id);
         return ResponseEntity.ok(new BaseApiResponse<>(adminService.removeCategory(id)));
     }
 }

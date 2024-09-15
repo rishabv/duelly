@@ -7,4 +7,7 @@ public interface AdminService {
     Category createCategory(CategoryDto data);
 
     String removeCategory(Long id);
+
+    Category getCategoryDetails(Long id);
+
 }

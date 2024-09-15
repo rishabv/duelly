@@ -7,6 +7,9 @@ public class RestApiConstant {
     public static final String ADMIN_URL = "/admin";
 
     public static final String LOGIN = "/login";
+
+    public static final String REFRESH = "/refresh";
+
     public static final String SIGNUP = "/signup";
     public static final String VERIFY = "/verifyUser";
 

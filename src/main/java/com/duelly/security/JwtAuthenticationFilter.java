@@ -1,9 +1,11 @@
 package com.duelly.security;
 
+import com.duelly.constants.ErrorMessages;
 import com.duelly.entities.User;
 import com.duelly.util.JwtUtil;
 import com.duelly.services.jwt.JwtService;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +45,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         jwt = authHeader.substring(7);
         userEmail = jwtUtil.extractUsername(jwt);
+
+        if (authHeader.startsWith("Bearer ")) {
+            try {
+                String username = jwtUtil.extractAllClaims(jwt).getSubject();
+                System.out.println(username);
+            } catch (JwtException e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                return;
+            }
+        }
+
         if(StringUtils.isNotEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails = jwtService.userDetailsService().loadUserByUsername(userEmail);
             if(jwtUtil.isTokenValid(jwt, userDetails)){

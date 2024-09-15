@@ -35,4 +35,8 @@ public class AdminServiceImpl implements AdminService {
         categoryRepository.deleteById(id);
         return SuccessMessage.CATEGORY_DELETED;
     }
+
+    public Category getCategoryDetails(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ErrorMessages.CATEGORY_NOT_EXIST));
+    }
 }

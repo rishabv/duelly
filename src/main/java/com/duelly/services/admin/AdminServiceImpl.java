@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
@@ -30,10 +32,32 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public String removeCategory(Long id){
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ErrorMessages.CATEGORY_NOT_EXIST));
+        Optional<Category> category = categoryRepository.findById(id);
         validateIfAssigned(id);
-        categoryRepository.deleteById(id);
-        return SuccessMessage.CATEGORY_DELETED;
+        if(category.isPresent()){
+            Category foundcategory = category.get();
+            foundcategory.setRemoved(true);
+            categoryRepository.save(foundcategory);
+            return SuccessMessage.CATEGORY_DELETED;
+        } else {
+            return "Category not found";
+        }
+    }
+
+    public String activateCategory(Long id, boolean isActive) {
+        Optional<Category> category = categoryRepository.findById(id);
+        // validateIfAssigned(id);
+        if(category.isPresent()){
+            Category foundcategory = category.get();
+            if(foundcategory.isRemoved()) {
+                throw new IllegalArgumentException("Category not found");
+            }
+            foundcategory.setActive(isActive);
+            categoryRepository.save(foundcategory);
+            return SuccessMessage.CATEGORY_DELETED;
+        } else {
+            return "Category not found";
+        }
     }
 
     public Category getCategoryDetails(Long id) {

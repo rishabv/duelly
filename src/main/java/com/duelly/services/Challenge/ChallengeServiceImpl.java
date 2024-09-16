@@ -19,13 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+
+import javax.swing.text.html.Option;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,12 +35,13 @@ public class ChallengeServiceImpl implements ChallengeService {
     private final CategoryRepository categoryRepository;
 
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable){
-        return convertTopMappingPageToResponse(categoryRepository.findAll(pageable), pageable);
+        return convertTopMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
     }
 
     private BasePaginationResponse<ResultResponse<Category>> convertTopMappingPageToResponse(
             Page<Category> categoryPage, Pageable pageable) {
         var categories = categoryPage.getContent();
+        System.out.println(categories + " " + pageable.getPageSize() + " " + pageable.getPageNumber());
         return new BasePaginationResponse<>(new ResultResponse<Category>(categories), pageable.getPageSize(), pageable.getPageNumber() ,categoryPage.getTotalPages());
     }
 
@@ -55,14 +55,20 @@ public class ChallengeServiceImpl implements ChallengeService {
     public String createChallenge(CreateChallengeRequest body, User user){
         System.out.println(body + " and " + user.getId() + "name is " + user.getFullName());
         Challenge newChallenge  = new Challenge();
-//        newChallenge.setChallengeName();
         this.validateChallenge(body);
         BeanUtils.copyProperties(body, newChallenge);
         return "";
     }
 
     public String removeCategory(Long id) {
-        categoryRepository.deleteById(id);
-        return SuccessMessage.CATEGORY_DELETED;
+        Optional<Category> category = categoryRepository.findById(id);
+        if(category.isPresent()){
+            Category foundcategory = category.get();
+            foundcategory.setRemoved(true);
+            categoryRepository.save(foundcategory);
+            return SuccessMessage.CATEGORY_DELETED;
+        } else {
+            return "Category not found";
+        }
     }
 }

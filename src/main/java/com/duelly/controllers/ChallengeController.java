@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +33,15 @@ import java.util.List;
 @RequestMapping(RestApiConstant.BASE_URL + RestApiConstant.CHALLENGE)
 @Validated
 public class ChallengeController {
+    @Autowired
     private final ChallengeService challengeService;
 
     @Operation(summary = "Fetching the list of all the categories.")
     @GetMapping("/category/list")
-    public ResponseEntity<BasePaginationResponse> getCategorylist(@ParameterObject @PageableDefault(page=0, size = 10) Pageable pageable) {
+    public ResponseEntity<BasePaginationResponse<ResultResponse<Category>>> getCategorylist(@ParameterObject @PageableDefault() Pageable pageable) {
 
         BasePaginationResponse<ResultResponse<Category>> categoryList = challengeService.getAllCategorylist(pageable);
-
+        System.out.println("categoryList "+ categoryList);
         return ResponseEntity.ok().body(categoryList);
     }
 

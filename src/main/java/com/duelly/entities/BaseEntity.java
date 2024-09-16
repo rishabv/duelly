@@ -25,7 +25,7 @@ public class BaseEntity {
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
     protected LocalDateTime lastModifiedDate;
-
+    @Column(columnDefinition = "tinyint(1) default 0")
     protected boolean isDeleted = false;
 
     @Column(name = "is_active", columnDefinition = "tinyint(1) default 1")

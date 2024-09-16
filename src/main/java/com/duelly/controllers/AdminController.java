@@ -24,6 +24,12 @@ public class AdminController {
         return ResponseEntity.ok(new BaseApiResponse<>(category, SuccessMessage.CATEGORY_CREATED));
     }
 
+    @PostMapping("/category/activate/{id}")
+    public ResponseEntity<?> activateCategory(@RequestBody @PathVariable Long id, @RequestParam boolean isActive) {
+        String msg = adminService.activateCategory(id, isActive);
+        return ResponseEntity.ok(new BaseApiResponse<>(msg));
+    }
+
     @GetMapping("/category/{id}")
     public ResponseEntity<?> getCategoryDetails(@RequestBody @PathVariable Long id) {
         System.out.println("Here");

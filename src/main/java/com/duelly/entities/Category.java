@@ -2,10 +2,7 @@ package com.duelly.entities;
 
 import com.duelly.dtos.CategoryDto;
 import com.duelly.enums.Status;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,7 +17,8 @@ public class Category extends BaseEntity {
     private String image;
     @Enumerated(EnumType.ORDINAL)
     private Status status;
-    private boolean isRemoved = false;
+    @Column(columnDefinition = "tinyint(1) default 0")
+    private boolean removed = false;
     private int addCount = 0;
     private boolean isTop = false;
     public CategoryDto getCategoryDto() {

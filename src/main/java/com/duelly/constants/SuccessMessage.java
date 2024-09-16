@@ -19,4 +19,6 @@ public class SuccessMessage {
     public static final String CHALLENGE_PARTICIPATED = "Participated successfully.";
     public static final String COMPANY_CREATED = "Company created successfully.";
 
+    public static final String COMPANY_ACTIVATED = "Company activated.";
+
 }

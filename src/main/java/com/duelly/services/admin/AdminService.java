@@ -10,4 +10,5 @@ public interface AdminService {
 
     Category getCategoryDetails(Long id);
 
+    String activateCategory(Long id, boolean isActive);
 }

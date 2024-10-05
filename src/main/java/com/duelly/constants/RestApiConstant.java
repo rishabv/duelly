@@ -17,4 +17,8 @@ public class RestApiConstant {
 
     public static final String CREATE_CHALLENGE = "/create-challenge";
 
+    public static final String FORGOT_PASSWORD = "/forgotPassword";
+    public static final String RESET_PASSWORD = "/resetPassword";
+
+
 }

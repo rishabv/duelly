@@ -2,15 +2,12 @@ package com.duelly.services.auth;
 
 import com.duelly.constants.ErrorMessages;
 import com.duelly.constants.SuccessMessage;
-import com.duelly.dtos.requests.LoginRequest;
-import com.duelly.dtos.requests.RefreshRequest;
-import com.duelly.dtos.requests.SignupRequest;
+import com.duelly.dtos.requests.*;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.LoginResponse;
 import com.duelly.dtos.responses.RefreshResponse;
 import com.duelly.enums.UserRole;
 import com.duelly.dtos.UserDto;
-import com.duelly.dtos.requests.VerifyUserRequest;
 import com.duelly.entities.User;
 import com.duelly.repositories.UserRepository;
 import com.duelly.services.UserService.UserService;
@@ -27,6 +24,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -139,5 +137,40 @@ public class AuthServiceImpl implements AuthService{
             log.info(requestOtp + " is differ from " + otp);
             throw new IllegalArgumentException("Invalid Otp");
         }
+    }
+
+    public String forgotPassword(String email) {
+        Optional<User> user = userRepository.findFirstByEmail(email);
+        if(!user.isPresent()){
+            throw new  IllegalArgumentException("Email id is invalid");
+        }
+        final int otp = utils.generateOtp();
+        user.ifPresent(obj -> {
+            obj.setForgotOtp(otp);
+        });
+        userRepository.save(user.get());
+        log.info("Your otp is " + otp);
+        return "Otp has been sent to your email.";
+    }
+
+    public String resetPassword(ResetPasswordRequest request) {
+        Optional<User> user = userRepository.findFirstByEmail(request.getEmail());
+        if(!user.isPresent()){
+            throw new  IllegalArgumentException("Email id is invalid");
+        }
+        if (request.getOtp() != user.get().getForgotOtp()){
+            throw new  IllegalArgumentException("Please enter a valid otp");
+        }
+        user.ifPresent(obj -> {
+            obj.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        });
+        userRepository.save(user.get());
+        return "";
+    }
+
+    public String changePassword(ChangePasswordRequest request, User user) {
+        Optional<User> userData = userRepository.findFirstByEmail(user.getEmail());
+//        System.out.println(passwordEncoder.encode(request.get);
+        return "Password Changed successfully";
     }
 }

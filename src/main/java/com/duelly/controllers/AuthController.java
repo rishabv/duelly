@@ -1,9 +1,7 @@
 package com.duelly.controllers;
 
 import com.duelly.constants.RestApiConstant;
-import com.duelly.dtos.requests.LoginRequest;
-import com.duelly.dtos.requests.RefreshRequest;
-import com.duelly.dtos.requests.VerifyUserRequest;
+import com.duelly.dtos.requests.*;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.LoginResponse;
 import com.duelly.dtos.responses.RefreshResponse;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.*;
-import com.duelly.dtos.requests.SignupRequest;
 import com.duelly.dtos.responses.SignupResponse;
 import com.duelly.services.auth.AuthService;
 
@@ -75,4 +72,19 @@ public class AuthController {
         UserDto userDto = authService.verify(request, user);
         return ResponseEntity.status(HttpStatus.OK).body(new BaseApiResponse<>(user, SuccessMessage.EMIAL_VERIFIED));
     }
+
+    @PostMapping(RestApiConstant.FORGOT_PASSWORD)
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request){
+        log.info("forgot email" + " : " + request.getEmail());
+        String msg = authService.forgotPassword(request.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseApiResponse<>(msg));
+    }
+
+    @PostMapping(RestApiConstant.RESET_PASSWORD)
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest request){
+        log.info("entered otp" + " : " + request.getOtp());
+        String msg = authService.resetPassword(request);
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseApiResponse<>(msg));
+    }
 }
+

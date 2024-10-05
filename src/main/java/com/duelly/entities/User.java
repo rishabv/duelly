@@ -59,6 +59,7 @@ public class User implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
     private int judgeRank = 0;
+    private int forgotOtp;
     @OneToOne
     private RefreshToken refreshToken;
 

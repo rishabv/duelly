@@ -1,6 +1,7 @@
 package com.duelly.services.auth;
 
 import com.duelly.dtos.requests.LoginRequest;
+import com.duelly.dtos.requests.ResetPasswordRequest;
 import com.duelly.dtos.requests.SignupRequest;
 import com.duelly.dtos.UserDto;
 import com.duelly.dtos.requests.VerifyUserRequest;
@@ -15,4 +16,8 @@ public interface AuthService {
     UserDto verify(VerifyUserRequest request, User user);
 
     RefreshResponse getRefreshToken(String token);
+
+    String forgotPassword(String email);
+
+    String resetPassword(ResetPasswordRequest req);
 }

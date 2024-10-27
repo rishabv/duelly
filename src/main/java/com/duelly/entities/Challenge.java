@@ -40,7 +40,7 @@ public class Challenge extends BaseEntity {
     private String priceImage;
     private String companyName;
     @ManyToOne
-    @JoinColumn(name="company_id")
+    @JoinColumn(name="company_id", referencedColumnName="id")
     private Sponsor company;
     private int totalJudge = 0;
     private String judgePriceImage;

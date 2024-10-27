@@ -13,6 +13,7 @@ import com.duelly.enums.Status;
 import com.duelly.repositories.CategoryRepository;
 import com.duelly.repositories.ChallengeRepository;
 import com.duelly.repositories.SponsorRepository;
+import com.duelly.repositories.UserRepository;
 import com.duelly.util.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Autowired
     private final SponsorRepository sponsorRepository;
+
+    @Autowired
+    private final UserRepository userRepository;
 
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable){
         return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
@@ -81,10 +85,16 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     public String createChallenge(CreateChallengeRequest body, User user){
         System.out.println(body + " and " + user.getId() + "name is " + user.getFullName());
-        Challenge newChallenge  = new Challenge();
         this.validateChallenge(body);
+        Challenge newChallenge  = new Challenge();
+        User foundUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
         BeanUtils.copyProperties(body, newChallenge);
-//        challengeRepository.save(newChallenge);
+        Long sponsorId = Long.parseLong(body.getCompanyId());
+        Optional<Sponsor> foundSponsor = sponsorRepository.findById(sponsorId);
+        newChallenge.setCreatedBy(foundUser);
+        newChallenge.setCompany(foundSponsor.get());
+        challengeRepository.save(newChallenge);
         return "";
     }
 

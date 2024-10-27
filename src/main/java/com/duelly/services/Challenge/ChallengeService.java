@@ -4,6 +4,7 @@ import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.Category;
+import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -17,4 +18,5 @@ public interface ChallengeService {
     String createChallenge(CreateChallengeRequest body, User user);
 
     String removeCategory(Long id);
+    BasePaginationResponse<ResultResponse<Sponsor>> getAllSponsorlist(Pageable pageable);
 }

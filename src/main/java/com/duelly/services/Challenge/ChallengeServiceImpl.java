@@ -7,9 +7,12 @@ import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
+import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
+import com.duelly.enums.Status;
 import com.duelly.repositories.CategoryRepository;
 import com.duelly.repositories.ChallengeRepository;
+import com.duelly.repositories.SponsorRepository;
 import com.duelly.util.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +37,17 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Autowired
     private final CategoryRepository categoryRepository;
 
+    @Autowired
+    private final ChallengeRepository challengeRepository;
+
+    @Autowired
+    private final SponsorRepository sponsorRepository;
+
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable){
-        return convertTopMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
+        return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
     }
 
-    private BasePaginationResponse<ResultResponse<Category>> convertTopMappingPageToResponse(
+    private BasePaginationResponse<ResultResponse<Category>> convertMappingPageToResponse(
             Page<Category> categoryPage, Pageable pageable) {
         var categories = categoryPage.getContent();
         System.out.println(categories + " " + pageable.getPageSize() + " " + pageable.getPageNumber());
@@ -48,8 +57,26 @@ public class ChallengeServiceImpl implements ChallengeService {
     private void validateChallenge(CreateChallengeRequest body) {
         String validFrom = body.getValidFrom();
         String validTo = body.getValidTo();
-        Date date = Utils.getDateFromIsoString("2020-02-13T18:51:09.840Z");
-        System.out.println(date);
+        Long category = Long.parseLong(body.getCategory());
+        String name = body.getChallengeName();
+        Date from = Utils.getDateFromIsoString(validFrom);
+        Date to = Utils.getDateFromIsoString(validTo);
+        boolean isAlreadyExists = challengeRepository.existsByChallengeName(name);
+        if (isAlreadyExists) {
+            throw new IllegalArgumentException("Challenge name already exists");
+        }
+        if (from.equals(to) || from.after(to)) {
+            throw new IllegalArgumentException("from date must be before than to Date");
+        }
+        Optional<Category> categoryObj = categoryRepository.findById(category);
+        if (!categoryObj.isPresent()) {
+            throw new IllegalArgumentException("Category is invalid");
+        }
+        Long companyId = Long.parseLong(body.getCompanyId());
+        Optional<Sponsor> sponsor = sponsorRepository.findById(companyId);
+        if (!sponsor.isPresent()) {
+            throw new IllegalArgumentException("Sponsor is invalid");
+        }
     }
 
     public String createChallenge(CreateChallengeRequest body, User user){
@@ -57,6 +84,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         Challenge newChallenge  = new Challenge();
         this.validateChallenge(body);
         BeanUtils.copyProperties(body, newChallenge);
+//        challengeRepository.save(newChallenge);
         return "";
     }
 
@@ -70,5 +98,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         } else {
             return "Category not found";
         }
+    }
+
+
+    public BasePaginationResponse<ResultResponse<Sponsor>> getAllSponsorlist(Pageable pageable) {
+        var list = sponsorRepository.findByStatus(Status.ACTIVE, pageable);
+        return new BasePaginationResponse<>(new ResultResponse<Sponsor>(list.getContent()), pageable.getPageSize(), pageable.getPageNumber(), list.getTotalPages());
     }
 }

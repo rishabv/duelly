@@ -1,14 +1,15 @@
 package com.duelly.repositories;
 
 import com.duelly.entities.Category;
+import com.duelly.entities.Sponsor;
+import com.duelly.enums.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @Query("Select t from Category t where t.removed = false AND isActive=true")
-    Page<Category> getAllCategoriesForUser(Pageable pageable);
+public interface SponsorRepository extends JpaRepository<Sponsor, Long> {
+    boolean existsByCompanyName(String name);
 
-    boolean existsByCategory(String name);
+    Page<Sponsor> findByStatus(Status status, Pageable pageable);
 }

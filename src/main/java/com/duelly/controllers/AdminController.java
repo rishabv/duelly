@@ -4,12 +4,12 @@ import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.responses.BaseApiResponse;
+import com.duelly.dtos.requests.SponsorDto;
 import com.duelly.entities.Category;
 import com.duelly.services.admin.AdminService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -41,5 +41,10 @@ public class AdminController {
     @DeleteMapping("/category/{id}")
     public ResponseEntity<?> removeCategory(@PathVariable Long id){
         return ResponseEntity.ok(new BaseApiResponse<>(adminService.removeCategory(id)));
+    }
+
+    @PostMapping("/create-sponsor")
+        public ResponseEntity<?> createSponsor(@RequestBody @Valid SponsorDto request) {
+        return ResponseEntity.ok(new BaseApiResponse<>(adminService.createSponsor(request)));
     }
 }

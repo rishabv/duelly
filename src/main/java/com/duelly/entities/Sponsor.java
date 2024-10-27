@@ -1,9 +1,7 @@
 package com.duelly.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.duelly.enums.Status;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +14,8 @@ public class Sponsor extends BaseEntity {
     private String image;
     private int userCount;
     private int challengeCount;
-    private String status;
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
     @ManyToOne
     @JoinColumn(name="created_by", referencedColumnName = "id")
     private User createdBy;

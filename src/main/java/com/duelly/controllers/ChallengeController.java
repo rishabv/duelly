@@ -9,6 +9,7 @@ import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
+import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
 import com.duelly.services.Challenge.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,5 +60,11 @@ public class ChallengeController {
     public ResponseEntity<?> addChallenge(@RequestBody @Valid CreateChallengeRequest body, @AuthenticationPrincipal User user) {
         String message = challengeService.createChallenge(body, user);
         return ResponseEntity.ok(new BaseApiResponse<>(SuccessMessage.CHALLENGE_CREATED));
+    }
+
+    @GetMapping("/sponsor/list")
+    public ResponseEntity<?> getSponsorList(@ParameterObject @PageableDefault() Pageable pageable){
+        BasePaginationResponse<ResultResponse<Sponsor>> sponsorList = challengeService.getAllSponsorlist(pageable);
+        return ResponseEntity.ok().body(sponsorList);
     }
 }

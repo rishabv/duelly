@@ -1,11 +1,13 @@
 package com.duelly.controllers;
 
+import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.BasePaginationResponse;
+import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
@@ -66,5 +68,12 @@ public class ChallengeController {
     public ResponseEntity<?> getSponsorList(@ParameterObject @PageableDefault() Pageable pageable){
         BasePaginationResponse<ResultResponse<Sponsor>> sponsorList = challengeService.getAllSponsorlist(pageable);
         return ResponseEntity.ok().body(sponsorList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getChallengeDetails(@PathVariable String id){
+        Long challengeId = Long.parseLong(id);
+        ChallengeDetailsProjection challenge = challengeService.getChallengeDetails(challengeId);
+        return ResponseEntity.ok(new BaseApiResponse<>(challenge));
     }
 }

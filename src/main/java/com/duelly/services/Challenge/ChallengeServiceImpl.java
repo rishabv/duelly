@@ -1,9 +1,11 @@
 package com.duelly.services.Challenge;
 
+import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
+import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
@@ -114,5 +116,11 @@ public class ChallengeServiceImpl implements ChallengeService {
     public BasePaginationResponse<ResultResponse<Sponsor>> getAllSponsorlist(Pageable pageable) {
         var list = sponsorRepository.findByStatus(Status.ACTIVE, pageable);
         return new BasePaginationResponse<>(new ResultResponse<Sponsor>(list.getContent()), pageable.getPageSize(), pageable.getPageNumber(), list.getTotalPages());
+    }
+
+    public ChallengeDetailsProjection getChallengeDetails(Long id) {
+        ChallengeDetailsProjection details = challengeRepository.findChallengeDetails(id);
+        System.out.println(details);
+        return details;
     }
 }

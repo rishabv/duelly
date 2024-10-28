@@ -1,9 +1,12 @@
 package com.duelly.services.Challenge;
+import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
+import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.Category;
+import com.duelly.entities.Challenge;
 import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,4 +22,6 @@ public interface ChallengeService {
 
     String removeCategory(Long id);
     BasePaginationResponse<ResultResponse<Sponsor>> getAllSponsorlist(Pageable pageable);
+
+    ChallengeDetailsProjection getChallengeDetails(Long id);
 }

@@ -6410,3 +6410,78 @@ Caused by: java.lang.ClassNotFoundException: com.duelly.Projections.ChallengeDet
 2024-10-28 [INFO] com.duelly.DuellyApplication [restartedMain] Started DuellyApplication in 3.713 seconds (process running for 19729.639)
 2024-10-28 [INFO] org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener [restartedMain] Condition evaluation unchanged
 2024-10-28 [INFO] com.duelly.security.JwtAuthenticationFilter [http-nio-9000-exec-2] [USER] : true
+2024-10-28 [INFO] org.springframework.boot.devtools.autoconfigure.LocalDevToolsAutoConfiguration$RestartingClassPathChangeChangedEventListener [File Watcher] Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2024-10-28 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [Thread-280] Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [Thread-280] HikariPool-68 - Shutdown initiated...
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [Thread-280] HikariPool-68 - Shutdown completed.
+2024-10-28 [INFO] com.duelly.DuellyApplication [restartedMain] Starting DuellyApplication using Java 21.0.1 with PID 21516 (C:\Users\Rishabh\Documents\Spring\duelly\target\classes started by Rishabh in C:\Users\Rishabh\Documents\Spring\duelly)
+2024-10-28 [INFO] com.duelly.DuellyApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-10-28 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-28 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 185 ms. Found 4 JPA repository interfaces.
+2024-10-28 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port 9000 (http)
+2024-10-28 [INFO] org.apache.catalina.core.StandardService [restartedMain] Starting service [Tomcat]
+2024-10-28 [INFO] org.apache.catalina.core.StandardEngine [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-10-28 [INFO] org.apache.catalina.core.ContainerBase.[Tomcat-15].[localhost].[/] [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-10-28 [INFO] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1207 ms
+2024-10-28 [INFO] org.hibernate.jpa.internal.util.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-28 [INFO] org.hibernate.cache.internal.RegionFactoryInitiator [restartedMain] HHH000026: Second-level cache disabled
+2024-10-28 [INFO] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-69 - Starting...
+2024-10-28 [INFO] com.zaxxer.hikari.pool.HikariPool [restartedMain] HikariPool-69 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3d1c01e2
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-69 - Start completed.
+2024-10-28 [INFO] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-28 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-28 [WARN] org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'challengeController' defined in file [C:\Users\Rishabh\Documents\Spring\duelly\target\classes\com\duelly\controllers\ChallengeController.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'com.duelly.services.Challenge.ChallengeService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2024-10-28 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [restartedMain] Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-69 - Shutdown initiated...
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-69 - Shutdown completed.
+2024-10-28 [INFO] org.apache.catalina.core.StandardService [restartedMain] Stopping service [Tomcat]
+2024-10-28 [INFO] org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-10-28 [ERROR] org.springframework.boot.diagnostics.LoggingFailureAnalysisReporter [restartedMain] 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in com.duelly.controllers.ChallengeController required a bean of type 'com.duelly.services.Challenge.ChallengeService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'com.duelly.services.Challenge.ChallengeService' in your configuration.
+
+2024-10-28 [INFO] com.duelly.DuellyApplication [restartedMain] Starting DuellyApplication using Java 21.0.1 with PID 21516 (C:\Users\Rishabh\Documents\Spring\duelly\target\classes started by Rishabh in C:\Users\Rishabh\Documents\Spring\duelly)
+2024-10-28 [INFO] com.duelly.DuellyApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-10-28 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-28 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 97 ms. Found 4 JPA repository interfaces.
+2024-10-28 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port 9000 (http)
+2024-10-28 [INFO] org.apache.catalina.core.StandardService [restartedMain] Starting service [Tomcat]
+2024-10-28 [INFO] org.apache.catalina.core.StandardEngine [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-10-28 [INFO] org.apache.catalina.core.ContainerBase.[Tomcat-16].[localhost].[/] [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-10-28 [INFO] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 1159 ms
+2024-10-28 [INFO] org.hibernate.jpa.internal.util.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-28 [INFO] org.hibernate.cache.internal.RegionFactoryInitiator [restartedMain] HHH000026: Second-level cache disabled
+2024-10-28 [INFO] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-70 - Starting...
+2024-10-28 [INFO] com.zaxxer.hikari.pool.HikariPool [restartedMain] HikariPool-70 - Added connection com.mysql.cj.jdbc.ConnectionImpl@b275175
+2024-10-28 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-70 - Start completed.
+2024-10-28 [INFO] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-28 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-28 [WARN] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-28 [INFO] org.springframework.security.web.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5a26b0ad, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@183d04, org.springframework.security.web.context.SecurityContextHolderFilter@2eee6df7, org.springframework.security.web.header.HeaderWriterFilter@28de837, org.springframework.security.web.authentication.logout.LogoutFilter@5eb08a9f, com.duelly.security.JwtAuthenticationFilter@65c96834, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@4a5d51a5, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@27fcd489, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7f63b912, org.springframework.security.web.session.SessionManagementFilter@26e05a8c, org.springframework.security.web.access.ExceptionTranslationFilter@47647671, org.springframework.security.web.access.intercept.AuthorizationFilter@3f59e348]
+2024-10-28 [INFO] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-10-28 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat started on port 9000 (http) with context path ''
+2024-10-28 [INFO] com.duelly.DuellyApplication [restartedMain] Started DuellyApplication in 3.265 seconds (process running for 20105.49)
+2024-10-28 [INFO] org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener [restartedMain] Condition evaluation unchanged
+2024-10-28 [INFO] org.apache.catalina.core.ContainerBase.[Tomcat-16].[localhost].[/] [http-nio-9000-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-10-28 [INFO] org.springframework.web.servlet.DispatcherServlet [http-nio-9000-exec-2] Initializing Servlet 'dispatcherServlet'
+2024-10-28 [INFO] org.springframework.web.servlet.DispatcherServlet [http-nio-9000-exec-2] Completed initialization in 2 ms
+2024-10-28 [INFO] com.duelly.security.JwtAuthenticationFilter [http-nio-9000-exec-2] [USER] : true
+2024-10-28 [INFO] com.duelly.security.JwtAuthenticationFilter [http-nio-9000-exec-3] [USER] : true
+2024-10-28 [WARN] org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver [http-nio-9000-exec-3] Resolved [java.lang.IllegalArgumentException: Challenge name already exists]
+2024-10-28 [INFO] com.duelly.security.JwtAuthenticationFilter [http-nio-9000-exec-4] [USER] : true
+2024-10-28 [INFO] com.duelly.security.JwtAuthenticationFilter [http-nio-9000-exec-5] [USER] : true

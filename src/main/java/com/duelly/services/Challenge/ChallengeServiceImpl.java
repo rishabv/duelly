@@ -96,6 +96,9 @@ public class ChallengeServiceImpl implements ChallengeService {
         Optional<Sponsor> foundSponsor = sponsorRepository.findById(sponsorId);
         newChallenge.setCreatedBy(foundUser);
         newChallenge.setCompany(foundSponsor.get());
+        Long categoryId = Long.parseLong(body.getCategory());
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        newChallenge.setCategory(category.get());
         challengeRepository.save(newChallenge);
         return "";
     }

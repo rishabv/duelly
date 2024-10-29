@@ -3,7 +3,9 @@ package com.duelly.services.Challenge;
 import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
+import com.duelly.dtos.requests.ChallengeRequest;
 import com.duelly.dtos.requests.CreateChallengeRequest;
+import com.duelly.dtos.requests.UpdateChallengePatchRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
@@ -60,34 +62,61 @@ public class ChallengeServiceImpl implements ChallengeService {
         return new BasePaginationResponse<>(new ResultResponse<Category>(categories), pageable.getPageSize(), pageable.getPageNumber() ,categoryPage.getTotalPages());
     }
 
-    private void validateChallenge(CreateChallengeRequest body) {
-        String validFrom = body.getValidFrom();
-        String validTo = body.getValidTo();
-        Long category = Long.parseLong(body.getCategory());
-        String name = body.getChallengeName();
-        Date from = Utils.getDateFromIsoString(validFrom);
-        Date to = Utils.getDateFromIsoString(validTo);
-        boolean isAlreadyExists = challengeRepository.existsByChallengeName(name);
-        if (isAlreadyExists) {
-            throw new IllegalArgumentException("Challenge name already exists");
-        }
-        if (from.equals(to) || from.after(to)) {
-            throw new IllegalArgumentException("from date must be before than to Date");
-        }
-        Optional<Category> categoryObj = categoryRepository.findById(category);
-        if (!categoryObj.isPresent()) {
-            throw new IllegalArgumentException("Category is invalid");
-        }
-        Long companyId = Long.parseLong(body.getCompanyId());
-        Optional<Sponsor> sponsor = sponsorRepository.findById(companyId);
-        if (!sponsor.isPresent()) {
-            throw new IllegalArgumentException("Sponsor is invalid");
+    private void validateChallenge(ChallengeRequest body, Challenge challenge) {
+        if (body instanceof CreateChallengeRequest createRequest) {
+            String validFrom = createRequest.getValidFrom();
+            String validTo = createRequest.getValidTo();
+            Long category = Long.parseLong(createRequest.getCategory());
+            String name = createRequest.getChallengeName();
+            Date from = Utils.getDateFromIsoString(validFrom);
+            Date to = Utils.getDateFromIsoString(validTo);
+            boolean isAlreadyExists = challengeRepository.existsByChallengeName(name);
+            if (isAlreadyExists) {
+                throw new IllegalArgumentException("Challenge name already exists");
+            }
+            if (from.equals(to) || from.after(to)) {
+                throw new IllegalArgumentException("from date must be before than to Date");
+            }
+            Optional<Category> categoryObj = categoryRepository.findById(category);
+            if (!categoryObj.isPresent()) {
+                throw new IllegalArgumentException("Category is invalid");
+            }
+            Long companyId = Long.parseLong(createRequest.getCompanyId());
+            Optional<Sponsor> sponsor = sponsorRepository.findById(companyId);
+            if (!sponsor.isPresent()) {
+                throw new IllegalArgumentException("Sponsor is invalid");
+            }
+        } else if (body instanceof UpdateChallengePatchRequest updateRequest) {
+            Optional<String> validFrom = updateRequest.getValidFrom();
+            Optional<String> validTo = updateRequest.getValidTo();
+            if (validFrom.isPresent()) {
+                System.out.println(validFrom);
+                Date from = Utils.getDateFromIsoString(validFrom.get());
+                Date to = Utils.getDateFromIsoString(challenge.getValidTo());
+                if (from.equals(to) || from.after(to)) {
+                    throw new IllegalArgumentException("from date must be before than to Date");
+                }
+            }
+            if (validTo.isPresent()) {
+                Date from = Utils.getDateFromIsoString(challenge.getValidFrom());
+                Date to = Utils.getDateFromIsoString(validTo.get());
+                if (from.equals(to) || from.after(to)) {
+                    throw new IllegalArgumentException("from date must be before than to Date");
+                }
+            }
+            Optional<String> name = updateRequest.getChallengeName();
+            if (name.isPresent()) {
+                Optional<Challenge> foundChallenge = challengeRepository.findByChallengeName(name.get());
+                if (foundChallenge.isPresent() && foundChallenge.get().getId() != challenge.getId()) {
+                    throw new IllegalArgumentException("Challenge name already exists");
+                }
+            }
         }
     }
 
     public String createChallenge(CreateChallengeRequest body, User user){
         System.out.println(body + " and " + user.getId() + "name is " + user.getFullName());
-        this.validateChallenge(body);
+        this.validateChallenge(body, null);
         Challenge newChallenge  = new Challenge();
         User foundUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -99,6 +128,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         Long categoryId = Long.parseLong(body.getCategory());
         Optional<Category> category = categoryRepository.findById(categoryId);
         newChallenge.setCategory(category.get());
+        System.out.println(newChallenge.toString());
         challengeRepository.save(newChallenge);
         return "";
     }
@@ -125,5 +155,42 @@ public class ChallengeServiceImpl implements ChallengeService {
         ChallengeDetailsProjection details = challengeRepository.findChallengeDetails(id);
         System.out.println(details);
         return details;
+    }
+
+    public String updateChallenge(String id, UpdateChallengePatchRequest request){
+        Long challengeId = Long.parseLong(id);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+        this.validateChallenge(request, challenge);
+        if (request.getCompanyId().isPresent()) {
+            Long companyId = Long.parseLong(request.getCompanyId().get());
+            Optional<Sponsor> sponsor = sponsorRepository.findById(companyId);
+            if (!sponsor.isPresent()) {
+                throw new IllegalArgumentException("Sponsor is invalid");
+            } else {
+                challenge.setCompany(sponsor.get());
+            }
+        }
+        if (request.getCategory().isPresent()) {
+            Long category = Long.parseLong(request.getCategory().get());
+            Optional<Category> categoryObj = categoryRepository.findById(category);
+            if (!categoryObj.isPresent()) {
+                throw new IllegalArgumentException("Category is invalid");
+            } else {
+                challenge.setCategory(categoryObj.get());
+            }
+        }
+        request.getChallengeName().ifPresent(challenge:: setChallengeName);
+        request.getChallengeRequirement().ifPresent(challenge:: setChallengeRequirement);
+        request.getThumbnailImageUrlName().ifPresent(challenge:: setThumbnailImageUrlName);
+        request.getVideoUrl().ifPresent(challenge:: setVideoUrl);
+        request.getVideoUrlName().ifPresent(challenge:: setVideoUrlName);
+        request.getValidFrom().ifPresent(challenge:: setValidFrom);
+        request.getValidTo().ifPresent(challenge:: setValidTo);
+        request.getTermConditions().ifPresent(challenge::setTermConditions);
+        request.getIsPrice().ifPresent(challenge::setPrice);
+        request.getPriceName().ifPresent(challenge::setPriceName);
+        request.getPriceImage().ifPresent(challenge::setPriceImage);
+        challengeRepository.save(challenge);
+        return "Challenge updated successfully";
     }
 }

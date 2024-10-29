@@ -5,6 +5,7 @@ import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
+import com.duelly.dtos.requests.UpdateChallengePatchRequest;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
@@ -76,4 +77,14 @@ public class ChallengeController {
         ChallengeDetailsProjection challenge = challengeService.getChallengeDetails(challengeId);
         return ResponseEntity.ok(new BaseApiResponse<>(challenge));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateChallenge(@PathVariable String id, @RequestBody UpdateChallengePatchRequest request) {
+        return ResponseEntity.ok(new BaseApiResponse<>(challengeService.updateChallenge(id, request)));
+    }
+
+//    @GetMapping("/challenge/list")
+//    public ResponseEntity<?> getChallengeList() {
+//
+//    }
 }

@@ -7,13 +7,13 @@ import lombok.Data;
 
 @Data
 //@
-public class CreateChallengeRequest {
+public class CreateChallengeRequest implements ChallengeRequest {
     @NotNull(message = "Challenge Name is required")
     private final String challengeName;
     @NotNull(message = "Thumbnail image is required")
     private final String thumbnailImageUrl;
     @NotNull(message = "Video is required")
-    private final String viedoUrl;
+    private final String videoUrl;
     @NotEmpty(message = "Valid from is required")
     private final String validFrom;
     @NotEmpty(message = "Valid to is required")

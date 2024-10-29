@@ -2,6 +2,7 @@ package com.duelly.services.Challenge;
 import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
+import com.duelly.dtos.requests.UpdateChallengePatchRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
@@ -24,4 +25,6 @@ public interface ChallengeService {
     BasePaginationResponse<ResultResponse<Sponsor>> getAllSponsorlist(Pageable pageable);
 
     ChallengeDetailsProjection getChallengeDetails(Long id);
+
+    String updateChallenge(String id, UpdateChallengePatchRequest request);
 }

@@ -14,6 +14,7 @@ import com.duelly.entities.Challenge;
 import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
 import com.duelly.enums.Status;
+import com.duelly.enums.UserRole;
 import com.duelly.repositories.CategoryRepository;
 import com.duelly.repositories.ChallengeRepository;
 import com.duelly.repositories.SponsorRepository;
@@ -51,7 +52,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Autowired
     private final UserRepository userRepository;
 
-    public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable){
+    public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable) {
         return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
     }
 
@@ -59,7 +60,7 @@ public class ChallengeServiceImpl implements ChallengeService {
             Page<Category> categoryPage, Pageable pageable) {
         var categories = categoryPage.getContent();
         System.out.println(categories + " " + pageable.getPageSize() + " " + pageable.getPageNumber());
-        return new BasePaginationResponse<>(new ResultResponse<Category>(categories), pageable.getPageSize(), pageable.getPageNumber() ,categoryPage.getTotalPages());
+        return new BasePaginationResponse<>(new ResultResponse<Category>(categories), pageable.getPageSize(), pageable.getPageNumber(), categoryPage.getTotalPages());
     }
 
     private void validateChallenge(ChallengeRequest body, Challenge challenge) {
@@ -114,10 +115,10 @@ public class ChallengeServiceImpl implements ChallengeService {
         }
     }
 
-    public String createChallenge(CreateChallengeRequest body, User user){
+    public String createChallenge(CreateChallengeRequest body, User user) {
         System.out.println(body + " and " + user.getId() + "name is " + user.getFullName());
         this.validateChallenge(body, null);
-        Challenge newChallenge  = new Challenge();
+        Challenge newChallenge = new Challenge();
         User foundUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         BeanUtils.copyProperties(body, newChallenge);
@@ -135,7 +136,7 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     public String removeCategory(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
-        if(category.isPresent()){
+        if (category.isPresent()) {
             Category foundcategory = category.get();
             foundcategory.setRemoved(true);
             categoryRepository.save(foundcategory);
@@ -153,13 +154,17 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     public ChallengeDetailsProjection getChallengeDetails(Long id) {
         ChallengeDetailsProjection details = challengeRepository.findChallengeDetails(id);
-        System.out.println(details);
         return details;
     }
 
-    public String updateChallenge(String id, UpdateChallengePatchRequest request){
+    public String updateChallenge(String id, UpdateChallengePatchRequest request, User user) {
         Long challengeId = Long.parseLong(id);
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+        User creator = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid request"));
+
+        if (creator.getRole() != UserRole.ADMIN && challenge.getCreatedBy().getId() != user.getId()) {
+            throw new IllegalArgumentException("You are not authorized to update this challenge");
+        }
         this.validateChallenge(request, challenge);
         if (request.getCompanyId().isPresent()) {
             Long companyId = Long.parseLong(request.getCompanyId().get());
@@ -179,17 +184,18 @@ public class ChallengeServiceImpl implements ChallengeService {
                 challenge.setCategory(categoryObj.get());
             }
         }
-        request.getChallengeName().ifPresent(challenge:: setChallengeName);
-        request.getChallengeRequirement().ifPresent(challenge:: setChallengeRequirement);
-        request.getThumbnailImageUrlName().ifPresent(challenge:: setThumbnailImageUrlName);
-        request.getVideoUrl().ifPresent(challenge:: setVideoUrl);
-        request.getVideoUrlName().ifPresent(challenge:: setVideoUrlName);
-        request.getValidFrom().ifPresent(challenge:: setValidFrom);
-        request.getValidTo().ifPresent(challenge:: setValidTo);
+        request.getChallengeName().ifPresent(challenge::setChallengeName);
+        request.getChallengeRequirement().ifPresent(challenge::setChallengeRequirement);
+        request.getThumbnailImageUrlName().ifPresent(challenge::setThumbnailImageUrlName);
+        request.getVideoUrl().ifPresent(challenge::setVideoUrl);
+        request.getVideoUrlName().ifPresent(challenge::setVideoUrlName);
+        request.getValidFrom().ifPresent(challenge::setValidFrom);
+        request.getValidTo().ifPresent(challenge::setValidTo);
         request.getTermConditions().ifPresent(challenge::setTermConditions);
         request.getIsPrice().ifPresent(challenge::setPrice);
         request.getPriceName().ifPresent(challenge::setPriceName);
         request.getPriceImage().ifPresent(challenge::setPriceImage);
+        request.getIsActive().ifPresent(challenge::setActive);
         challengeRepository.save(challenge);
         return "Challenge updated successfully";
     }

@@ -22,6 +22,8 @@ public interface ChallengeDetailsProjection {
 
     CategoryInfo getCategory();
 
+    boolean getIsActive();
+
     interface SponsorInfo {
         String getCompanyName();
     }

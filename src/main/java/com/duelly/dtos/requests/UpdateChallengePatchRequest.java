@@ -22,4 +22,5 @@ public class UpdateChallengePatchRequest implements ChallengeRequest {
     private Optional<String> priceName = Optional.empty();
     private Optional<String> priceImage = Optional.empty();
     private Optional<String> companyId = Optional.empty();
+    private Optional<Boolean> isActive = Optional.empty();
 }

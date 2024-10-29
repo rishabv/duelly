@@ -26,5 +26,5 @@ public interface ChallengeService {
 
     ChallengeDetailsProjection getChallengeDetails(Long id);
 
-    String updateChallenge(String id, UpdateChallengePatchRequest request);
+    String updateChallenge(String id, UpdateChallengePatchRequest request, User user);
 }

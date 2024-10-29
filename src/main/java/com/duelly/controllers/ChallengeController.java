@@ -79,8 +79,8 @@ public class ChallengeController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateChallenge(@PathVariable String id, @RequestBody UpdateChallengePatchRequest request) {
-        return ResponseEntity.ok(new BaseApiResponse<>(challengeService.updateChallenge(id, request)));
+    public ResponseEntity<?> updateChallenge(@PathVariable String id, @RequestBody UpdateChallengePatchRequest request, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(new BaseApiResponse<>(challengeService.updateChallenge(id, request, user)));
     }
 
 //    @GetMapping("/challenge/list")

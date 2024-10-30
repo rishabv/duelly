@@ -1,0 +1,23 @@
+2024-10-30 [INFO] com.duelly.DuellyApplication [restartedMain] Starting DuellyApplication using Java 21.0.1 with PID 17640 (C:\Users\Rishabh\Documents\Spring\duelly\target\classes started by Rishabh in C:\Users\Rishabh\Documents\Spring\duelly)
+2024-10-30 [INFO] com.duelly.DuellyApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-10-30 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-10-30 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 30 ms. Found 4 JPA repository interfaces.
+2024-10-30 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port 9000 (http)
+2024-10-30 [INFO] org.apache.catalina.core.StandardService [restartedMain] Starting service [Tomcat]
+2024-10-30 [INFO] org.apache.catalina.core.StandardEngine [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.18]
+2024-10-30 [INFO] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-10-30 [INFO] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 524 ms
+2024-10-30 [INFO] org.hibernate.jpa.internal.util.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-10-30 [INFO] org.hibernate.cache.internal.RegionFactoryInitiator [restartedMain] HHH000026: Second-level cache disabled
+2024-10-30 [INFO] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-10-30 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-2 - Starting...
+2024-10-30 [INFO] com.zaxxer.hikari.pool.HikariPool [restartedMain] HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5bb44076
+2024-10-30 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-2 - Start completed.
+2024-10-30 [INFO] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain] HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-10-30 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-10-30 [WARN] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-10-30 [INFO] org.springframework.security.web.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@367ef3fa, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@f67e39, org.springframework.security.web.context.SecurityContextHolderFilter@51b35c80, org.springframework.security.web.header.HeaderWriterFilter@59f773a1, org.springframework.security.web.authentication.logout.LogoutFilter@957fd39, com.duelly.security.JwtAuthenticationFilter@1f74e04f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2e425356, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4cca5744, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@2bd31766, org.springframework.security.web.session.SessionManagementFilter@f1dfce, org.springframework.security.web.access.ExceptionTranslationFilter@759153eb, org.springframework.security.web.access.intercept.AuthorizationFilter@2b5dd633]
+2024-10-30 [INFO] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-10-30 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat started on port 9000 (http) with context path ''
+2024-10-30 [INFO] com.duelly.DuellyApplication [restartedMain] Started DuellyApplication in 1.207 seconds (process running for 687.559)
+2024-10-30 [INFO] org.springframework.boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener [restartedMain] Condition evaluation unchanged

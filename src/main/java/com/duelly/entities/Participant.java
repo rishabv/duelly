@@ -16,8 +16,6 @@ public class Participant extends BaseEntity {
     private String videoDesc;
     private String videoUrl;
     private String thumbnailImageUrl;
-    private String challengeType;
-    private String type;
     private boolean isWon = false;
     private int viewsCount;
     private String viewUserId;
@@ -27,9 +25,6 @@ public class Participant extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="sponsor_id", referencedColumnName = "id")
     private Sponsor sponsor;
-    @ManyToOne
-    @JoinColumn(referencedColumnName = "id", name = "created_by", nullable = false)
-    private User createdBy;
     @Enumerated(EnumType.ORDINAL)
     private Status status;
     private boolean isDeleted = false;

@@ -1,6 +1,7 @@
 package com.duelly.services.Challenge;
 
 import com.duelly.Projections.ChallengeDetailsProjection;
+import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.ChallengeRequest;
@@ -198,5 +199,10 @@ public class ChallengeServiceImpl implements ChallengeService {
         request.getIsActive().ifPresent(challenge::setActive);
         challengeRepository.save(challenge);
         return "Challenge updated successfully";
+    }
+
+    public BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user) {
+        Page<MyChallengesProjection> list = challengeRepository.findChallengesById(pageable, user.getId());
+        return new BasePaginationResponse<>(new ResultResponse<MyChallengesProjection>(list.getContent()), pageable.getPageSize(), pageable.getPageNumber(), list.getTotalPages());
     }
 }

@@ -1,6 +1,7 @@
 package com.duelly.controllers;
 
 import com.duelly.Projections.ChallengeDetailsProjection;
+import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
@@ -83,8 +84,9 @@ public class ChallengeController {
         return ResponseEntity.ok(new BaseApiResponse<>(challengeService.updateChallenge(id, request, user)));
     }
 
-//    @GetMapping("/challenge/list")
-//    public ResponseEntity<?> getChallengeList() {
-//
-//    }
+    @GetMapping("/my-challenges")
+    public ResponseEntity<?> getChallengeList(@ParameterObject @PageableDefault() Pageable pageable, @AuthenticationPrincipal User user) {
+        BasePaginationResponse<ResultResponse<MyChallengesProjection>> list = challengeService.getMyChallenges(pageable, user);
+        return ResponseEntity.ok().body(list);
+    }
 }

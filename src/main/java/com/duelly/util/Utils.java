@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.text.DecimalFormat;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
@@ -106,5 +108,10 @@ public class Utils {
         TemporalAccessor ta = DateTimeFormatter.ISO_INSTANT.parse(s);
         Instant i = Instant.from(ta);
         return Date.from(i);
+    }
+
+    public static boolean isAfter(LocalDate localDate, Date date) {
+        LocalDate convertedDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.isAfter(convertedDate);
     }
 }

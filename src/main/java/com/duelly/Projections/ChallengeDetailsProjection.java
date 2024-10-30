@@ -1,6 +1,7 @@
 package com.duelly.Projections;
 
 import com.duelly.entities.User;
+import org.springframework.beans.factory.annotation.Value;
 
 public interface ChallengeDetailsProjection {
     Long getId();
@@ -23,6 +24,9 @@ public interface ChallengeDetailsProjection {
     CategoryInfo getCategory();
 
     boolean getIsActive();
+
+    @Value("#{target.createdBy.id}")
+    String getCreatedById();
 
     interface SponsorInfo {
         String getCompanyName();

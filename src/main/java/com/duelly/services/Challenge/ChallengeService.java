@@ -1,5 +1,6 @@
 package com.duelly.services.Challenge;
 import com.duelly.Projections.ChallengeDetailsProjection;
+import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.requests.UpdateChallengePatchRequest;
@@ -27,4 +28,5 @@ public interface ChallengeService {
     ChallengeDetailsProjection getChallengeDetails(Long id);
 
     String updateChallenge(String id, UpdateChallengePatchRequest request, User user);
+    BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user);
 }

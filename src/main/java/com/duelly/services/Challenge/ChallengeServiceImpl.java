@@ -118,6 +118,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         System.out.println(body + " and " + user.getId() + "name is " + user.getFullName());
         this.validateChallenge(body, null);
         Challenge newChallenge = new Challenge();
+        Participant participant = new Participant();
         User foundUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         BeanUtils.copyProperties(body, newChallenge);
@@ -129,7 +130,14 @@ public class ChallengeServiceImpl implements ChallengeService {
         Optional<Category> category = categoryRepository.findById(categoryId);
         newChallenge.setCategory(category.get());
         System.out.println(newChallenge.toString());
-        challengeRepository.save(newChallenge);
+        newChallenge.setActive(true);
+        Challenge challenge = challengeRepository.save(newChallenge);
+        participant.setChallenge(challenge);
+        participant.setTitle(challenge.getChallengeName());
+        participant.setVideoUrl(body.getVideoUrl());
+        participant.setUser(foundUser);
+        participant.setVideoDesc(body.getChellengeRequirement());
+        participantRepository.save(participant);
         return "";
     }
 
@@ -208,6 +216,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         Long challengeId = Long.parseLong(request.getChallengeId());
         Long companyId = Long.parseLong(request.getCompanyId());
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("challenge id is invalid"));
+        System.out.println(challenge.getParticipants().toString());
+        boolean alreadyJoinedChallenge = participantRepository.checkIfAlreadyParticipated(challengeId, user.getId());
+        if (alreadyJoinedChallenge){
+            throw new IllegalArgumentException("Already participated");
+        }
         User createdBy = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("invalid user"));
         Sponsor company = sponsorRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("Invalid company id"));
         Participant participant = new Participant();

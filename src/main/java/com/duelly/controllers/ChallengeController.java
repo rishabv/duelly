@@ -93,6 +93,6 @@ public class ChallengeController {
 
     @PostMapping("/participate")
     public ResponseEntity<?> participateChallenge(@RequestBody @Valid ParticipateRequest request, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok().body(challengeService.participateChallenge(request, user));
+        return ResponseEntity.ok().body(new BaseApiResponse<>(challengeService.participateChallenge(request, user)));
     }
 }

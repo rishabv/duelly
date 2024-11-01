@@ -6,6 +6,7 @@ import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
+import com.duelly.dtos.requests.ParticipateRequest;
 import com.duelly.dtos.requests.UpdateChallengePatchRequest;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.BasePaginationResponse;
@@ -88,5 +89,10 @@ public class ChallengeController {
     public ResponseEntity<?> getChallengeList(@ParameterObject @PageableDefault() Pageable pageable, @AuthenticationPrincipal User user) {
         BasePaginationResponse<ResultResponse<MyChallengesProjection>> list = challengeService.getMyChallenges(pageable, user);
         return ResponseEntity.ok().body(list);
+    }
+
+    @PostMapping("/participate")
+    public ResponseEntity<?> participateChallenge(@RequestBody @Valid ParticipateRequest request, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok().body(challengeService.participateChallenge(request, user));
     }
 }

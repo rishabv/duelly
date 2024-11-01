@@ -3,6 +3,7 @@ import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
+import com.duelly.dtos.requests.ParticipateRequest;
 import com.duelly.dtos.requests.UpdateChallengePatchRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
@@ -29,4 +30,6 @@ public interface ChallengeService {
 
     String updateChallenge(String id, UpdateChallengePatchRequest request, User user);
     BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user);
+
+    String participateChallenge(ParticipateRequest request, User user);
 }

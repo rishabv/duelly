@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -39,6 +40,8 @@ public class Challenge extends BaseEntity {
     private String priceName;
     private String priceImage;
     private String companyName;
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
+    List<Participant> participants;
     @ManyToOne
     @JoinColumn(name="company_id", referencedColumnName="id")
     private Sponsor company;

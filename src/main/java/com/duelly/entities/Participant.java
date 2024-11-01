@@ -1,6 +1,5 @@
 package com.duelly.entities;
 
-import com.duelly.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,6 @@ public class Participant extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="sponsor_id", referencedColumnName = "id")
     private Sponsor sponsor;
-    @Enumerated(EnumType.ORDINAL)
-    private Status status;
     private boolean isDeleted = false;
     @ManyToOne
     @JoinColumn(referencedColumnName = "id", name = "user_id", nullable = false)
@@ -34,4 +31,5 @@ public class Participant extends BaseEntity {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "challenge_id", referencedColumnName = "id")
     private Challenge challenge;
+    private int amount = 0;
 }

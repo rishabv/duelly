@@ -6,20 +6,15 @@ import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.ChallengeRequest;
 import com.duelly.dtos.requests.CreateChallengeRequest;
+import com.duelly.dtos.requests.ParticipateRequest;
 import com.duelly.dtos.requests.UpdateChallengePatchRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
-import com.duelly.entities.Category;
-import com.duelly.entities.Challenge;
-import com.duelly.entities.Sponsor;
-import com.duelly.entities.User;
+import com.duelly.entities.*;
 import com.duelly.enums.Status;
 import com.duelly.enums.UserRole;
-import com.duelly.repositories.CategoryRepository;
-import com.duelly.repositories.ChallengeRepository;
-import com.duelly.repositories.SponsorRepository;
-import com.duelly.repositories.UserRepository;
+import com.duelly.repositories.*;
 import com.duelly.util.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +47,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
+    private final ParticipantRepository participantRepository;
 
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable) {
         return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
@@ -204,5 +202,20 @@ public class ChallengeServiceImpl implements ChallengeService {
     public BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user) {
         Page<MyChallengesProjection> list = challengeRepository.findChallengesById(pageable, user.getId());
         return new BasePaginationResponse<>(new ResultResponse<MyChallengesProjection>(list.getContent()), pageable.getPageSize(), pageable.getPageNumber(), list.getTotalPages());
+    }
+
+    public String participateChallenge(ParticipateRequest request, User user) {
+        Long challengeId = Long.parseLong(request.getChallengeId());
+        Long companyId = Long.parseLong(request.getCompanyId());
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("challenge id is invalid"));
+        User createdBy = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("invalid user"));
+        Sponsor company = sponsorRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("Invalid company id"));
+        Participant participant = new Participant();
+        BeanUtils.copyProperties(request, participant);
+        participant.setChallenge(challenge);
+        participant.setUser(createdBy);
+        participant.setSponsor(company);
+        participantRepository.save(participant);
+        return "Joined successfully";
     }
 }

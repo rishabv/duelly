@@ -1,6 +1,7 @@
 package com.duelly.controllers;
 
 import com.duelly.Projections.ChallengeDetailsProjection;
+import com.duelly.Projections.ChallengeLeadersProjection;
 import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
@@ -94,5 +95,10 @@ public class ChallengeController {
     @PostMapping("/participate")
     public ResponseEntity<?> participateChallenge(@RequestBody @Valid ParticipateRequest request, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok().body(new BaseApiResponse<>(challengeService.participateChallenge(request, user)));
+    }
+
+    @GetMapping("/leaders/{id}")
+    public ResponseEntity<BaseApiResponse<List<ChallengeLeadersProjection>>> getChalllengeLeadersList(@PathVariable String id){
+        return ResponseEntity.ok(new BaseApiResponse(challengeService.getChallengeLeaders(id), "list fetched"));
     }
 }

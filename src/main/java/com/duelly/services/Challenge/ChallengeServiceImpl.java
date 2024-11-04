@@ -1,6 +1,7 @@
 package com.duelly.services.Challenge;
 
 import com.duelly.Projections.ChallengeDetailsProjection;
+import com.duelly.Projections.ChallengeLeadersProjection;
 import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
@@ -216,7 +217,6 @@ public class ChallengeServiceImpl implements ChallengeService {
         Long challengeId = Long.parseLong(request.getChallengeId());
         Long companyId = Long.parseLong(request.getCompanyId());
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("challenge id is invalid"));
-        System.out.println(challenge.getParticipants().toString());
         boolean alreadyJoinedChallenge = participantRepository.checkIfAlreadyParticipated(challengeId, user.getId());
         if (alreadyJoinedChallenge){
             throw new IllegalArgumentException("Already participated");
@@ -230,5 +230,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         participant.setSponsor(company);
         participantRepository.save(participant);
         return "Joined successfully";
+    }
+
+    public List<ChallengeLeadersProjection> getChallengeLeaders(String id) {
+        Long challengId = Long.parseLong(id);
+        List<ChallengeLeadersProjection> list = participantRepository.findLeaders(challengId);
+        return list;
     }
 }

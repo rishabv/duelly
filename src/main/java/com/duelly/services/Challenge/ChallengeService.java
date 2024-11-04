@@ -1,5 +1,6 @@
 package com.duelly.services.Challenge;
 import com.duelly.Projections.ChallengeDetailsProjection;
+import com.duelly.Projections.ChallengeLeadersProjection;
 import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
@@ -32,4 +33,6 @@ public interface ChallengeService {
     BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user);
 
     String participateChallenge(ParticipateRequest request, User user);
+
+    List<ChallengeLeadersProjection> getChallengeLeaders(String s);
 }

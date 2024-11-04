@@ -37,6 +37,7 @@ public class User implements UserDetails {
     private String city;
     private String phone;
     private String provider;
+    private String image;
     private String providerId;
     @JsonProperty("isRemoved")
     private boolean isRemoved;

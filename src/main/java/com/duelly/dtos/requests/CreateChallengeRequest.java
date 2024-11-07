@@ -1,5 +1,6 @@
 package com.duelly.dtos.requests;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +19,8 @@ public class CreateChallengeRequest implements ChallengeRequest {
     private final String validFrom;
     @NotEmpty(message = "Valid to is required")
     private final String validTo;
-    @NotEmpty(message = "Category is required")
+//    @NotEmpty(message = "Company is required")
+    @Nullable
     private final String companyId;
     private final String category;
     @NotNull(message = "Challenge requirement is required")

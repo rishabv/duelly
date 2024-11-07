@@ -13,6 +13,7 @@ import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
 import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
+import com.duelly.enums.ChallengeType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.data.domain.Pageable;
@@ -30,9 +31,11 @@ public interface ChallengeService {
     ChallengeDetailsProjection getChallengeDetails(Long id);
 
     String updateChallenge(String id, UpdateChallengePatchRequest request, User user);
-    BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user);
+    BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user, ChallengeType type);
 
     String participateChallenge(ParticipateRequest request, User user);
 
     List<ChallengeLeadersProjection> getChallengeLeaders(String s);
+
+    BasePaginationResponse<ResultResponse<MyChallengesProjection>> getParticipatedChallenges(Pageable pageable, User user, ChallengeType type);
 }

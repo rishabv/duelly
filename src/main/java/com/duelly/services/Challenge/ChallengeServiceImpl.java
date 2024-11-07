@@ -3,6 +3,7 @@ package com.duelly.services.Challenge;
 import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.Projections.ChallengeLeadersProjection;
 import com.duelly.Projections.MyChallengesProjection;
+import com.duelly.Projections.MyParticipatedChallenge;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.ChallengeRequest;
@@ -13,6 +14,7 @@ import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.*;
+import com.duelly.enums.ChallengeType;
 import com.duelly.enums.Status;
 import com.duelly.enums.UserRole;
 import com.duelly.repositories.*;
@@ -82,10 +84,12 @@ public class ChallengeServiceImpl implements ChallengeService {
             if (!categoryObj.isPresent()) {
                 throw new IllegalArgumentException("Category is invalid");
             }
-            Long companyId = Long.parseLong(createRequest.getCompanyId());
-            Optional<Sponsor> sponsor = sponsorRepository.findById(companyId);
-            if (!sponsor.isPresent()) {
-                throw new IllegalArgumentException("Sponsor is invalid");
+            if (createRequest.getCompanyId() != null) {
+                Long companyId = Long.parseLong(createRequest.getCompanyId());
+                Optional<Sponsor> sponsor = sponsorRepository.findById(companyId);
+                if (!sponsor.isPresent()) {
+                    throw new IllegalArgumentException("Sponsor is invalid");
+                }
             }
         } else if (body instanceof UpdateChallengePatchRequest updateRequest) {
             Optional<String> validFrom = updateRequest.getValidFrom();
@@ -123,15 +127,23 @@ public class ChallengeServiceImpl implements ChallengeService {
         User foundUser = userRepository.findById(user.getId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         BeanUtils.copyProperties(body, newChallenge);
+        if (body.getCompanyId() != null) {
+
         Long sponsorId = Long.parseLong(body.getCompanyId());
         Optional<Sponsor> foundSponsor = sponsorRepository.findById(sponsorId);
-        newChallenge.setCreatedBy(foundUser);
         newChallenge.setCompany(foundSponsor.get());
+        }
+        newChallenge.setCreatedBy(foundUser);
         Long categoryId = Long.parseLong(body.getCategory());
         Optional<Category> category = categoryRepository.findById(categoryId);
         newChallenge.setCategory(category.get());
         System.out.println(newChallenge.toString());
         newChallenge.setActive(true);
+        if(body.getChallengeType().equals("SPONSOR")) {
+            newChallenge.setChallengeType(ChallengeType.SPONSOR);
+        } else {
+            newChallenge.setChallengeType(ChallengeType.MEMBER);
+        }
         Challenge challenge = challengeRepository.save(newChallenge);
         participant.setChallenge(challenge);
         participant.setTitle(challenge.getChallengeName());
@@ -208,8 +220,8 @@ public class ChallengeServiceImpl implements ChallengeService {
         return "Challenge updated successfully";
     }
 
-    public BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user) {
-        Page<MyChallengesProjection> list = challengeRepository.findChallengesById(pageable, user.getId());
+    public BasePaginationResponse<ResultResponse<MyChallengesProjection>> getMyChallenges(Pageable pageable, User user, ChallengeType type) {
+        Page<MyChallengesProjection> list = challengeRepository.findChallengesByUserId(pageable, user.getId(), type);
         return new BasePaginationResponse<>(new ResultResponse<MyChallengesProjection>(list.getContent()), pageable.getPageSize(), pageable.getPageNumber(), list.getTotalPages());
     }
 
@@ -218,7 +230,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         Long companyId = Long.parseLong(request.getCompanyId());
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("challenge id is invalid"));
         boolean alreadyJoinedChallenge = participantRepository.checkIfAlreadyParticipated(challengeId, user.getId());
-        if (alreadyJoinedChallenge){
+        if (alreadyJoinedChallenge) {
             throw new IllegalArgumentException("Already participated");
         }
         User createdBy = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("invalid user"));
@@ -236,5 +248,10 @@ public class ChallengeServiceImpl implements ChallengeService {
         Long challengId = Long.parseLong(id);
         List<ChallengeLeadersProjection> list = participantRepository.findLeaders(challengId);
         return list;
+    }
+
+    public BasePaginationResponse<ResultResponse<MyChallengesProjection>> getParticipatedChallenges(Pageable pageable, User user, ChallengeType type) {
+        Page<MyChallengesProjection> localList = challengeRepository.findParticipatedChallenges(pageable, user.getId(), type);
+        return new BasePaginationResponse<>(new ResultResponse<MyChallengesProjection>(localList.getContent()), pageable.getPageSize(), pageable.getPageNumber(), localList.getTotalPages());
     }
 }

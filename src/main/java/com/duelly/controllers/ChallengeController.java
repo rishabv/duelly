@@ -17,6 +17,7 @@ import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
 import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
+import com.duelly.enums.ChallengeType;
 import com.duelly.services.Challenge.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -87,8 +88,14 @@ public class ChallengeController {
     }
 
     @GetMapping("/my-challenges")
-    public ResponseEntity<?> getChallengeList(@ParameterObject @PageableDefault() Pageable pageable, @AuthenticationPrincipal User user) {
-        BasePaginationResponse<ResultResponse<MyChallengesProjection>> list = challengeService.getMyChallenges(pageable, user);
+    public ResponseEntity<?> getChallengeList(@ParameterObject @PageableDefault() Pageable pageable, @AuthenticationPrincipal User user,
+                                              @RequestParam ChallengeType type, @RequestParam String query) {
+        BasePaginationResponse<ResultResponse<MyChallengesProjection>> list = null;
+        if (query.equals("myChallenges") || query.isEmpty()) {
+            list = challengeService.getMyChallenges(pageable, user, type);
+        } else if (query.equals("participated")) {
+            list = challengeService.getParticipatedChallenges(pageable, user, type);
+        }
         return ResponseEntity.ok().body(list);
     }
 

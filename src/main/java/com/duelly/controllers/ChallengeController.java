@@ -9,6 +9,7 @@ import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.requests.ParticipateRequest;
 import com.duelly.dtos.requests.UpdateChallengePatchRequest;
+import com.duelly.dtos.requests.VoteRequest;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
@@ -105,7 +106,12 @@ public class ChallengeController {
     }
 
     @GetMapping("/leaders/{id}")
-    public ResponseEntity<BaseApiResponse<List<ChallengeLeadersProjection>>> getChalllengeLeadersList(@PathVariable String id){
+    public ResponseEntity<BaseApiResponse<List<ChallengeLeadersProjection>>> getChallengeLeadersList(@PathVariable String id){
         return ResponseEntity.ok(new BaseApiResponse(challengeService.getChallengeLeaders(id), "list fetched"));
+    }
+
+    @PostMapping("/vote")
+    public ResponseEntity<BaseApiResponse<?>> voteParticipant(@RequestBody @Valid VoteRequest voteRequest, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(new BaseApiResponse<>(challengeService.voteForParticipant(voteRequest, user)));
     }
 }

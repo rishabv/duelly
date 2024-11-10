@@ -6,13 +6,11 @@ import com.duelly.dtos.CategoryDto;
 import com.duelly.dtos.requests.CreateChallengeRequest;
 import com.duelly.dtos.requests.ParticipateRequest;
 import com.duelly.dtos.requests.UpdateChallengePatchRequest;
+import com.duelly.dtos.requests.VoteRequest;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
-import com.duelly.entities.Category;
-import com.duelly.entities.Challenge;
-import com.duelly.entities.Sponsor;
-import com.duelly.entities.User;
+import com.duelly.entities.*;
 import com.duelly.enums.ChallengeType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -38,4 +36,6 @@ public interface ChallengeService {
     List<ChallengeLeadersProjection> getChallengeLeaders(String s);
 
     BasePaginationResponse<ResultResponse<MyChallengesProjection>> getParticipatedChallenges(Pageable pageable, User user, ChallengeType type);
+
+    String voteForParticipant(VoteRequest request, User user);
 }

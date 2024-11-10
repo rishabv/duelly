@@ -6,10 +6,7 @@ import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.Projections.MyParticipatedChallenge;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
-import com.duelly.dtos.requests.ChallengeRequest;
-import com.duelly.dtos.requests.CreateChallengeRequest;
-import com.duelly.dtos.requests.ParticipateRequest;
-import com.duelly.dtos.requests.UpdateChallengePatchRequest;
+import com.duelly.dtos.requests.*;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
@@ -53,6 +50,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Autowired
     private final ParticipantRepository participantRepository;
+
+    @Autowired
+    private final VoteRepository voteRepository;
 
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable) {
         return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
@@ -227,14 +227,13 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     public String participateChallenge(ParticipateRequest request, User user) {
         Long challengeId = Long.parseLong(request.getChallengeId());
-        Long companyId = Long.parseLong(request.getCompanyId());
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException("challenge id is invalid"));
         boolean alreadyJoinedChallenge = participantRepository.checkIfAlreadyParticipated(challengeId, user.getId());
         if (alreadyJoinedChallenge) {
             throw new IllegalArgumentException("Already participated");
         }
         User createdBy = userRepository.findById(user.getId()).orElseThrow(() -> new IllegalArgumentException("invalid user"));
-        Sponsor company = sponsorRepository.findById(companyId).orElseThrow(() -> new IllegalArgumentException("Invalid company id"));
+        Sponsor company = sponsorRepository.findById(challenge.getCompany().getId()).orElseThrow(() -> new IllegalArgumentException("Invalid company id"));
         Participant participant = new Participant();
         BeanUtils.copyProperties(request, participant);
         participant.setChallenge(challenge);
@@ -253,5 +252,31 @@ public class ChallengeServiceImpl implements ChallengeService {
     public BasePaginationResponse<ResultResponse<MyChallengesProjection>> getParticipatedChallenges(Pageable pageable, User user, ChallengeType type) {
         Page<MyChallengesProjection> localList = challengeRepository.findParticipatedChallenges(pageable, user.getId(), type);
         return new BasePaginationResponse<>(new ResultResponse<MyChallengesProjection>(localList.getContent()), pageable.getPageSize(), pageable.getPageNumber(), localList.getTotalPages());
+    }
+
+    public String voteForParticipant(VoteRequest voteRequest, User user) {
+        Long challengeId = Long.parseLong(voteRequest.getChallengeId());
+        Long participantId = Long.parseLong(voteRequest.getParticipantId());
+        boolean ifExists = participantRepository.existsByIdAndChallengeId(participantId, challengeId);
+        if(!ifExists) {
+            throw new IllegalArgumentException("Passed data is malformed");
+        }
+        boolean ifAlreadyExists = voteRepository.existsByVotedByIdAndParticipantId(user.getId(), participantId);
+        if(ifAlreadyExists) {
+            throw new IllegalArgumentException("Already voted.");
+        }
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new IllegalArgumentException(""));
+        Participant participant = participantRepository.findById(participantId).orElseThrow(() -> new IllegalArgumentException("Participant not found"));
+        Vote vote = new Vote();
+        vote.setPresentation(voteRequest.getPresentation());
+        vote.setSkills(voteRequest.getSkills());
+        vote.setTechnique(voteRequest.getTechnique());
+        vote.setDifficulty(voteRequest.getDifficulty());
+        vote.setPresentation(voteRequest.getPresentation());
+        vote.setParticipant(participant);
+        vote.setChallenge(challenge);
+        vote.setVotedBy(user);
+        voteRepository.save(vote);
+        return "Vote added successfully";
     }
 }

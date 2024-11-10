@@ -4,6 +4,8 @@ import com.duelly.entities.User;
 import org.springframework.beans.factory.annotation.Value;
 
 public interface ChallengeLeadersProjection {
+
+    Long getId();
     String getTitle();
     String getThumbnailImageUrl();
 

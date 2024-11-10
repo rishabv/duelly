@@ -20,6 +20,5 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     @Query(value = "SELECT c FROM participant p JOIN p.challenge c WHERE p.user.id = :userId", nativeQuery = true)
     Page<MyChallengesProjection> findParticipatedChallengesByUser(Pageable pageable, Long userId);
 
-
-
+    boolean existsByIdAndChallengeId(Long participantId, Long challengeId);
 }

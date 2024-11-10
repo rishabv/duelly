@@ -17,6 +17,4 @@ public class ParticipateRequest {
     private String thumbnailImageUrl;
     @NotEmpty(message = "Challenge Id is required")
     private String challengeId;
-    @NotEmpty(message = "Company Id is required")
-    private String companyId;
 }

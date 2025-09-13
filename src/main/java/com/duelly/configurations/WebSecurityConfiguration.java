@@ -3,6 +3,8 @@ package com.duelly.configurations;
 import com.duelly.constants.RestApiConstant;
 import com.duelly.enums.UserRole;
 import com.duelly.security.JwtAuthenticationFilter;
+import com.duelly.security.CustomAuthenticationEntryPoint;
+import com.duelly.security.CustomAccessDeniedHandler;
 import com.duelly.services.jwt.JwtService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +48,10 @@ public class WebSecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT,RestApiConstant.BASE_URL + "/admin/**", RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())
                         .requestMatchers(HttpMethod.DELETE,"/admin/**", "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())
                         .anyRequest().authenticated())
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint())
+                        .accessDeniedHandler(accessDeniedHandler())
+                )
                 .sessionManagement(mngmt -> mngmt.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class
@@ -66,5 +74,15 @@ public class WebSecurityConfiguration {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws  Exception{
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedHandler();
     }
 }

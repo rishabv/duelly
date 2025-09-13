@@ -23,6 +23,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.OffsetDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Component
@@ -51,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = jwtUtil.extractAllClaims(jwt).getSubject();
                 System.out.println(username);
             } catch (JwtException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                writeUnauthorizedJson(response, request.getRequestURI(), e.getMessage());
                 return;
             }
         }
@@ -75,5 +79,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void setUserToThreadLocal(UsernamePasswordAuthenticationToken authToken) {
         if(authToken.getPrincipal() instanceof User user) CurrentUserThreadLocal.setCurrentUser(user);
+    }
+
+    private void writeUnauthorizedJson(HttpServletResponse response, String path, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", OffsetDateTime.now().toString());
+        body.put("status", 401);
+        body.put("error", "Unauthorized");
+        body.put("message", StringUtils.isNotBlank(message) ? message : "Invalid or expired token");
+        body.put("path", path);
+        new ObjectMapper().writeValue(response.getOutputStream(), body);
     }
 }

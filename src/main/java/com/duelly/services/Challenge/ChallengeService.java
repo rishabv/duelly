@@ -3,10 +3,7 @@ import com.duelly.Projections.ChallengeDetailsProjection;
 import com.duelly.Projections.ChallengeLeadersProjection;
 import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.dtos.CategoryDto;
-import com.duelly.dtos.requests.CreateChallengeRequest;
-import com.duelly.dtos.requests.ParticipateRequest;
-import com.duelly.dtos.requests.UpdateChallengePatchRequest;
-import com.duelly.dtos.requests.VoteRequest;
+import com.duelly.dtos.requests.*;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
@@ -38,4 +35,8 @@ public interface ChallengeService {
     BasePaginationResponse<ResultResponse<MyChallengesProjection>> getParticipatedChallenges(Pageable pageable, User user, ChallengeType type);
 
     String voteForParticipant(VoteRequest request, User user);
+
+    String addNewReview(AddReviewRequest request, User user);
+    
+    List<Review> getChallengeReviews(Long challengeId);
 }

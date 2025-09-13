@@ -6,10 +6,7 @@ import com.duelly.Projections.MyChallengesProjection;
 import com.duelly.constants.RestApiConstant;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.CategoryDto;
-import com.duelly.dtos.requests.CreateChallengeRequest;
-import com.duelly.dtos.requests.ParticipateRequest;
-import com.duelly.dtos.requests.UpdateChallengePatchRequest;
-import com.duelly.dtos.requests.VoteRequest;
+import com.duelly.dtos.requests.*;
 import com.duelly.dtos.responses.BaseApiResponse;
 import com.duelly.dtos.responses.BasePaginationResponse;
 import com.duelly.dtos.responses.ChallengeDetailsResponse;
@@ -18,6 +15,7 @@ import com.duelly.entities.Category;
 import com.duelly.entities.Challenge;
 import com.duelly.entities.Sponsor;
 import com.duelly.entities.User;
+import com.duelly.entities.Review;
 import com.duelly.enums.ChallengeType;
 import com.duelly.services.Challenge.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -113,5 +111,16 @@ public class ChallengeController {
     @PostMapping("/vote")
     public ResponseEntity<BaseApiResponse<?>> voteParticipant(@RequestBody @Valid VoteRequest voteRequest, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(new BaseApiResponse<>(challengeService.voteForParticipant(voteRequest, user)));
+    }
+
+    @PostMapping("/add-review")
+    public ResponseEntity<BaseApiResponse<?>> addReview(@RequestBody @Valid AddReviewRequest reviewRequest, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(new BaseApiResponse<>(challengeService.addNewReview(reviewRequest, user)));
+    }
+
+    @GetMapping("/{challengeId}/reviews")
+    public ResponseEntity<BaseApiResponse<List<Review>>> getChallengeReviews(@PathVariable Long challengeId) {
+        List<Review> reviews = challengeService.getChallengeReviews(challengeId);
+        return ResponseEntity.ok(new BaseApiResponse<>(reviews, "Reviews fetched successfully"));
     }
 }

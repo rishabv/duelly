@@ -54,6 +54,9 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Autowired
     private final VoteRepository voteRepository;
 
+    @Autowired
+    private final ReviewRepository reviewRepository;
+
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable) {
         return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
     }
@@ -278,5 +281,44 @@ public class ChallengeServiceImpl implements ChallengeService {
         vote.setVotedBy(user);
         voteRepository.save(vote);
         return "Vote added successfully";
+    }
+
+    public String addNewReview(AddReviewRequest request, User user) {
+        Long challengeId = request.getChallengeId();
+        
+        // Check if challenge exists
+        Challenge challenge = challengeRepository.findById(challengeId)
+            .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+        
+        // Check if user has participated in the challenge
+        boolean hasParticipated = participantRepository.checkIfAlreadyParticipated(challengeId, user.getId());
+        if (!hasParticipated) {
+            throw new IllegalArgumentException("You can only review challenges you have participated in");
+        }
+        
+        // Check if user has already reviewed this challenge
+        boolean hasAlreadyReviewed = reviewRepository.existsByUserIdAndChallengeId(user.getId(), challengeId);
+        if (hasAlreadyReviewed) {
+            throw new IllegalArgumentException("You have already reviewed this challenge");
+        }
+        
+        // Create and save the review
+        Review review = new Review();
+        review.setChallenge(challenge);
+        review.setUser(user);
+        review.setText(request.getText());
+        review.setRating(request.getRating());
+        
+        reviewRepository.save(review);
+        
+        return "Review added successfully";
+    }
+
+    public List<Review> getChallengeReviews(Long challengeId) {
+        // Check if challenge exists
+        challengeRepository.findById(challengeId)
+            .orElseThrow(() -> new IllegalArgumentException("Challenge not found"));
+        
+        return reviewRepository.findByChallengeIdOrderByCreatedAtDesc(challengeId);
     }
 }

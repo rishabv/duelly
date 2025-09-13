@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fintech Banking System Blueprint</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .diagram { margin: 20px 0; }
+        h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🏦 Fintech Banking System - Architecture Blueprint</h1>
+    
+    <h2>High-Level System Architecture</h2>
+    <div class="diagram">
+        <div class="mermaid">
+graph TB
+    subgraph "Customer-Facing Architecture"
+        CWeb[Customer Web App]
+        CMobile[Customer Mobile App]
+        CAPI[Customer API Gateway]
+    end
+    
+    subgraph "Bank Admin Architecture"
+        AWeb[Admin Web Portal]
+        AAPI[Admin API Gateway]
+        RBAC[RBAC Service]
+    end
+    
+    subgraph "Core Microservices"
+        US[User Service]
+        AS[Account Service]
+        TS[Transaction Service]
+        CS[Card Service]
+        LS[Loan Service]
+        IS[Investment Service]
+        NS[Notification Service]
+        FDS[Fraud Detection Service]
+        COS[Compliance Service]
+        ADS[Admin Service]
+    end
+    
+    subgraph "Data Layer"
+        PG[(PostgreSQL)]
+        Redis[(Redis Cache)]
+        S3[(AWS S3)]
+    end
+    
+    CWeb --> CAPI
+    CMobile --> CAPI
+    AWeb --> AAPI
+    
+    CAPI --> US
+    CAPI --> AS
+    CAPI --> TS
+    CAPI --> CS
+    CAPI --> LS
+    CAPI --> IS
+    
+    AAPI --> RBAC
+    RBAC --> ADS
+    AAPI --> US
+    AAPI --> AS
+    AAPI --> TS
+    AAPI --> FDS
+    AAPI --> COS
+    
+    US --> PG
+    AS --> PG
+    TS --> PG
+    CS --> PG
+    LS --> PG
+    IS --> PG
+    ADS --> PG
+    
+    US --> Redis
+    AS --> Redis
+    TS --> Redis
+        </div>
+    </div>
+
+    <h2>RBAC Role Hierarchy</h2>
+    <div class="diagram">
+        <div class="mermaid">
+graph TB
+    subgraph "Executive Level"
+        CEO[CEO<br/>All Permissions]
+        GM[General Manager<br/>Branch Operations]
+        BM[Branch Manager<br/>Branch Level Control]
+    end
+    
+    subgraph "Operations Level"
+        OM[Operations Manager<br/>Daily Operations]
+        CSM[Customer Service Manager<br/>Customer Issues]
+        LM[Loan Manager<br/>Loan Operations]
+    end
+    
+    subgraph "Specialist Roles"
+        CO[Compliance Officer<br/>Regulatory Compliance]
+        FO[Fraud Officer<br/>Fraud Investigation]
+        AU[Auditor<br/>Audit & Review]
+        RO[Risk Officer<br/>Risk Assessment]
+    end
+    
+    subgraph "Front-line Staff"
+        CSR[Customer Service Rep<br/>Customer Support]
+        LO[Loan Officer<br/>Loan Processing]
+        TO[Teller<br/>Basic Transactions]
+        SO[System Operator<br/>System Maintenance]
+    end
+    
+    CEO --> GM
+    GM --> BM
+    BM --> OM
+    BM --> CSM
+    BM --> LM
+    
+    OM --> CSR
+    OM --> TO
+    OM --> SO
+    CSM --> CSR
+    LM --> LO
+    
+    CEO --> CO
+    CEO --> FO
+    CEO --> AU
+    CEO --> RO
+        </div>
+    </div>
+
+    <h2>Authentication Flow</h2>
+    <div class="diagram">
+        <div class="mermaid">
+sequenceDiagram
+    participant C as Customer/Admin
+    participant FE as Frontend
+    participant AG as API Gateway
+    participant AS as Auth Service
+    participant DB as PostgreSQL
+    participant Redis as Redis Cache
+    
+    C->>FE: Login Request
+    FE->>AG: POST /auth/login
+    AG->>AS: Validate Credentials
+    AS->>DB: Check User/Admin
+    DB-->>AS: User Details
+    AS->>AS: Generate JWT + Refresh Token
+    AS->>Redis: Store Session
+    AS-->>AG: JWT + Refresh Token
+    AG-->>FE: Authentication Response
+    FE->>FE: Store JWT in HttpOnly Cookie
+    
+    Note over C,Redis: Subsequent API Calls
+    C->>FE: API Request
+    FE->>AG: Request with JWT
+    AG->>AG: Validate JWT
+    AG->>Redis: Check Session
+    Redis-->>AG: Session Valid
+    AG->>AS: Check Permissions (Admin)
+    AS-->>AG: Permission Result
+    AG->>AG: Route to Service
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>

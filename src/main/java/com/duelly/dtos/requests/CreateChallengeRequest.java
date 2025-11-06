@@ -1,43 +1,44 @@
 package com.duelly.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.*;
 
 @Data
-//@
+@NoArgsConstructor
 public class CreateChallengeRequest implements ChallengeRequest {
     @NotNull(message = "Challenge Name is required")
-    private final String challengeName;
+    private String challengeName;
     @NotNull(message = "Thumbnail image is required")
-    private final String thumbnailImageUrl;
+    private String thumbnailImageUrl;
     @NotNull(message = "Video is required")
-    private final String videoUrl;
+    private String videoUrl;
     @NotEmpty(message = "Valid from is required")
-    private final String validFrom;
+    private String validFrom;
     @NotEmpty(message = "Valid to is required")
-    private final String validTo;
+    private String validTo;
 //    @NotEmpty(message = "Company is required")
     @Nullable
-    private final String companyId;
-    private final String category;
+    private String companyId;
+    private String category;
     @NotNull(message = "Challenge requirement is required")
-    private final String chellengeRequirement;
+    private String chellengeRequirement;
     @NotNull(message = "Terms and conditions is required")
-    private final String termConditions;
+    private String termConditions;
     @NotEmpty(message = "Challenge Type is required")
-    private final String challengeType;
+    private String challengeType;
     @NotNull(message = "isPrice is required")
-    private final boolean isPrice;
-    private final String priceName;
-    private final String priceImage;
-    private final boolean isJudgePrice;
-    private final String judgePriceImage;
-    private final String judgePrizeName;
-    private final String prizeVideo;
-    private final String prizeDetail;
-    private final String judgePrizeVideo;
-    private final String judgePrizeLink;
+    private boolean isPrice;
+    private String priceName;
+    private String priceImage;
+    private boolean isJudgePrice;
+    private String judgePriceImage;
+    private String judgePrizeName;
+    private String prizeVideo;
+    private String prizeDetail;
+    private String judgePrizeVideo;
+    private String judgePrizeLink;
 }

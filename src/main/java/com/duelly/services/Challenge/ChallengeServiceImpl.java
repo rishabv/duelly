@@ -12,8 +12,11 @@ import com.duelly.dtos.responses.ChallengeDetailsResponse;
 import com.duelly.dtos.responses.ResultResponse;
 import com.duelly.entities.*;
 import com.duelly.enums.ChallengeType;
+import com.duelly.enums.EventType;
 import com.duelly.enums.Status;
 import com.duelly.enums.UserRole;
+import com.duelly.events.NotificationEvent;
+import com.duelly.messaging.NotificationEventProducer;
 import com.duelly.repositories.*;
 import com.duelly.util.Utils;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +59,9 @@ public class ChallengeServiceImpl implements ChallengeService {
 
     @Autowired
     private final ReviewRepository reviewRepository;
+
+    @Autowired
+    private final NotificationEventProducer notificationEventProducer;
 
     public BasePaginationResponse<ResultResponse<Category>> getAllCategorylist(Pageable pageable) {
         return convertMappingPageToResponse(categoryRepository.getAllCategoriesForUser(pageable), pageable);
@@ -132,9 +138,9 @@ public class ChallengeServiceImpl implements ChallengeService {
         BeanUtils.copyProperties(body, newChallenge);
         if (body.getCompanyId() != null) {
 
-        Long sponsorId = Long.parseLong(body.getCompanyId());
-        Optional<Sponsor> foundSponsor = sponsorRepository.findById(sponsorId);
-        newChallenge.setCompany(foundSponsor.get());
+            Long sponsorId = Long.parseLong(body.getCompanyId());
+            Optional<Sponsor> foundSponsor = sponsorRepository.findById(sponsorId);
+            newChallenge.setCompany(foundSponsor.get());
         }
         newChallenge.setCreatedBy(foundUser);
         Long categoryId = Long.parseLong(body.getCategory());
@@ -142,7 +148,7 @@ public class ChallengeServiceImpl implements ChallengeService {
         newChallenge.setCategory(category.get());
         System.out.println(newChallenge.toString());
         newChallenge.setActive(true);
-        if(body.getChallengeType().equals("SPONSOR")) {
+        if (body.getChallengeType().equals("SPONSOR")) {
             newChallenge.setChallengeType(ChallengeType.SPONSOR);
         } else {
             newChallenge.setChallengeType(ChallengeType.MEMBER);
@@ -153,6 +159,26 @@ public class ChallengeServiceImpl implements ChallengeService {
         participant.setVideoUrl(body.getVideoUrl());
         participant.setUser(foundUser);
         participant.setVideoDesc(body.getChellengeRequirement());
+        try {
+            long userId = (long) 809;
+            Map<String, Object> values = new HashMap<>();
+            values.put("challengeName", challenge.getChallengeName());
+            values.put( "reviewText", challenge.getChallengeRequirement());
+
+        var event = new NotificationEvent(UUID.randomUUID(),
+                EventType.CHALLENGE_CREATED,
+                Instant.now(),
+               userId,
+                List.of(challenge.getCreatedBy().getId()),
+                "CHALLENGE",
+                String.valueOf(challenge.getId()),
+                "challenge.created",
+                values,
+                "something");
+        notificationEventProducer.publish(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         participantRepository.save(participant);
         return "";
     }

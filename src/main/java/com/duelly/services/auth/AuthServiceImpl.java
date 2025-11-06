@@ -1,5 +1,6 @@
 package com.duelly.services.auth;
 
+import com.duelly.annotations.LogExecutionTime;
 import com.duelly.constants.ErrorMessages;
 import com.duelly.constants.SuccessMessage;
 import com.duelly.dtos.requests.*;
@@ -49,6 +50,7 @@ public class AuthServiceImpl implements AuthService{
     private final Utils utils;
 
     @Override
+    @LogExecutionTime
     public UserDto createUser(SignupRequest signupRequest){
         Boolean isExist = userRepository.existsByEmail(signupRequest.getEmail());
         if(isExist) {
@@ -78,6 +80,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
+    @LogExecutionTime
     public UserDto loginUser(LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));

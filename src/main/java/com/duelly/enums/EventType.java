@@ -1,4 +1,7 @@
 package com.duelly.enums;
 
-public class EventType {
+public enum EventType {
+    REVIEW_ADDED,
+    CHALLENGE_CREATED,
+    CHALLENGE_JOINED
 }

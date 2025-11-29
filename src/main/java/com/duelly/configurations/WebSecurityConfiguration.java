@@ -45,6 +45,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(req->req.requestMatchers(RestApiConstant.BASE_URL + "/auth/**", RestApiConstant.BASE_URL + "/open-api/**", "/v3/api-docs/**", "/swagger-ui/*").permitAll()
                         .requestMatchers(HttpMethod.POST,RestApiConstant.BASE_URL + "/admin/**", RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())
                         .requestMatchers(HttpMethod.GET, RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.USER.name())
+                        .requestMatchers(HttpMethod.GET,  RestApiConstant.BASE_URL + "/actuator/**").permitAll()
                         .requestMatchers(HttpMethod.PUT,RestApiConstant.BASE_URL + "/admin/**", RestApiConstant.BASE_URL + "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())
                         .requestMatchers(HttpMethod.DELETE,"/admin/**", "/challenge/**").hasAnyAuthority(UserRole.ADMIN.name(), UserRole.USER.name())
                         .anyRequest().authenticated())
